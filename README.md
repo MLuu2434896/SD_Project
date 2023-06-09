@@ -7,5 +7,5 @@ Frontend:
 - npm version 9.7.1  
 - ***NOTE: If you used the installer on offical NodeJS website, npm would be included when installing Nodejs.  
 
-***NOTE:  
+NOTE:  
 - Frontend and backend will use 2 ports: 3000 for frontend and 8000 for backend, so if you have conflicts with previously deployed websites, change them as you'd like.  
