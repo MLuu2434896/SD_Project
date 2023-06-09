@@ -7,7 +7,7 @@ To create a venv:
         ***NOTE: you might have to add 'sudo' before the command if you're using MAC.  
         - Now the dir would have 3 folders: backend, frontend, and venv.
 
-    ***NOTE: you need to ACTIVATE your venv before installing any packages to avoid python from installing them to your global system.  
+    NOTE: you need to ACTIVATE your venv before installing any packages to avoid python from installing them to your global system.  
     - To activate venv:  
         - source venv/Scripts/activate (If you're using bash or zsh)  
         - venv\Scripts\activate.bat (If you're using CMD)  
