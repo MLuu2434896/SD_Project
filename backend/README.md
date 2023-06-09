@@ -3,9 +3,10 @@ I'd recommend installing python packages in a venv to avoid packages conflict on
 To create a venv:  
 - Navigate to the same dir as backend and frontend using cmd or bash.  
 - Insert the following command:  
-    - ```bash
-    python3 -m venv venv || python -m venv venv  
-    ```
+```python
+python3 -m venv venv OR  
+python -m venv venv  
+```
     - ***NOTE: you might have to add 'sudo' before the command if you're using MAC.  
     - Now the dir would have 3 folders: backend, frontend, and venv.  
 
