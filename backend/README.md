@@ -12,7 +12,7 @@ python -m venv venv
 - ***NOTE: you might have to add 'sudo' before the command if you're using MAC.  
 - Now the dir would have 3 folders: backend, frontend, and venv.  
 
-NOTE: you need to ACTIVATE your venv before installing any packages to avoid python from installing them to your global system.  
+NOTE: you need to **ACTIVATE** your venv before installing any packages to avoid python from installing them to your global system.  
 - To activate venv:  
 ```bash
 source venv/Scripts/activate # (If you're using bash or zsh)  
@@ -42,6 +42,9 @@ NOTES:
 - To deactivate a venv, just type 'deactivate' into your cmd/bash/zsh.  
 - If you want to delete the venv, just remove the venv folder and all packages installed in venv would be deleted as well.  
 - If you want to install more packages, just install using pip (must activate venv), but before commit to git, do:  
-    - pip freeze > requirements.txt  
-    - This will allow other people to install the same packages & version as you did.  
+```bash
+# This will allow other people to install the same packages & version as you did.  
+pip freeze > requirements.txt
+```  
+
 
