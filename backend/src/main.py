@@ -4,8 +4,10 @@ import uvicorn
 
 app = FastAPI()
 
-settings = [ "127.0.0.1:8000", "localhost:8000" ]
+settings = [ "127.0.0.1:3000", "localhost:3000" ]
 
+
+# Configure FastAPI to allow requests from web
 app.add_middleware(
     CORSMiddleware,
     allow_origins       = settings,
@@ -15,8 +17,13 @@ app.add_middleware(
 )
 
 @app.get( "/", tags=["root"] )
-async def read_root() -> dict[ str, str ]:
-    return {"Hello" : "World" }
+async def read_root() -> list:
+    return [
+        {"f_name" : "hello", "l_name" : "world" },
+        {"f_name" : "test", "l_name" : "world" },
+        {"f_name" : "sat", "l_name" : "sun" }
+    ]
+    
 
 @app.get( "/items/{items_id}" ) 
 async def read_item( items_id: int ):
