@@ -21,3 +21,6 @@ NOTE:
 npm install <package_name>
 ```
 - All packages will be saved in package.json under 'dependencies', so be sure to commit that file to git if you have installed more packages
+
+***NOTE
+- To update changes you've made to a file in frontend, just save that file and refresh the web browser.

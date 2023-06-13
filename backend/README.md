@@ -37,7 +37,15 @@ pip list # (and follow the command it gives you)
 pip install -r requirements.txt
 ```  
 
+- To run the backend
+```bash
+python3 main.py #OR
+python main.py #OR
+py main.py
+```
+
 NOTES:  
+- Once the backend is running, whenever you make changes, it will autimatically update the changes everytime you save a file.
 - Must activate venv before running any .py files in backend folder to allow python to detect packages installed in venv.  
 - To deactivate a venv, just type 'deactivate' into your cmd/bash/zsh.  
 - If you want to delete the venv, just remove the venv folder and all packages installed in venv would be deleted as well.  
