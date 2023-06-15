@@ -1,0 +1,31 @@
+<p> Paragraph Tag </p>
+
+<h1> Heading tags 1-6 </h1-6>
+
+<b> Bold tag </b> or <strong> Contents hvae strong important (rendered as bold) </strong>
+
+<i> Italic Tag </i> or <em> Emphasis Tag </em>
+
+<u> Underline Tag </u>
+
+<address> Indicates enclosed contents provided contact info </address>
+	- Usually use along with <a> Anchor Tag </a>: creates a hyperlink to webpages
+	- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address
+
+
+<br> Single line break </br>
+
+<img> Render an img </img>
+	- Usually use with src
+	- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
+
+<object> Represents an external resource </object>
+	- Need to specify type, data, width, height
+
+
+Working with new features:
+	- Create a new branch for new features in local repo
+	- Once features have been added, push to remote repo: git push origin <branch_name (not main) >
+	- If you're the owner of the remote repo, click on compare pull requests and if ok, merge it to main using web and delete the added 		newly added branch
+	- After successfully merged, move back to main in local branch to delete newly developed features if you want, or you can keep it 
+		for feature testing and restore point
