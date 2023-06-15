@@ -25,7 +25,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>
+      <h1 className='text-[#dc2626] text-3xl font-bold hover:underline hover:text-[#fbbf24]'>
           FastAPI React
       </h1>
       { object.map( print_info ) }
