@@ -1,0 +1,44 @@
+.LoginPage {
+    width: 100svw;
+    height: 100svh;
+}
+
+.sidebar_container {
+    width: 30%;
+    height: 100%;
+    background-color: aquamarine;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar_on {
+    width: 30%;
+}
+
+.sidebar_off {
+    width: 0%;
+}
+
+.sidebar_header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.sidebar_items {
+    margin-left: 10px;
+    padding-block: 0.5rem;
+}
+
+.sidebar_toggle_btn {
+    position: fixed;
+    top: 2rem;
+    right: 3rem;
+    background: transparent;
+    background-color: hsl(205, 71%, 74%);
+}

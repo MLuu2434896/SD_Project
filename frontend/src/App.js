@@ -1,36 +1,22 @@
-import './App.css';
-import axios from 'axios';
-import { useState, useEffect } from "react";
+import './styles/App.css';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
 
 function App() {
-  // useState accepts a return type and returns a var in an object and a setter
-  const [ object, setObject ] = useState( [] );
-
-  // Test function to see how frontend fetches data from backend
-  useEffect( () => {
-    axios.get( "http://localhost:8000" )
-      .then( (response) => {
-        const data = response.data
-        setObject( data ) 
-      })
-      .catch( (e) => {
-        setObject( e )
-      })
-  }, [] );
-
-  // Test function to see how frontend fetches info from backend
-  const print_info = (value, idx) => {
-    return <p key={idx}> {idx + 1}. {value.f_name} {value.l_name} </p>
-  }
-
-  return (
-    <div className="App">
-      <h1 className='text-[#dc2626] text-3xl font-bold hover:underline hover:text-[#fbbf24]'>
-          FastAPI React
-      </h1>
-      { object.map( print_info ) }
-    </div>
+  return ( 
+    <>
+    { /* Pre-define paths to all relevant pages */ }
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Home/>}></Route>
+        <Route exact path="/login" element={<LoginPage/>}></Route>
+      </Routes>
+    </BrowserRouter>
+    </>
   );
+  
 }
 
 export default App;
