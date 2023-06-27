@@ -29,3 +29,4 @@ Working with new features:
 	- If you're the owner of the remote repo, click on compare pull requests and if ok, merge it to main using web and delete the added 		newly added branch
 	- After successfully merged, move back to main in local branch to delete newly developed features if you want, or you can keep it 
 		for feature testing and restore point
+	- Do a 'git fetch --prune' to clean outdated branches on local repo
