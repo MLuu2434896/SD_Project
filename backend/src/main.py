@@ -4,19 +4,19 @@ import uvicorn
 
 app = FastAPI()
 
-settings = [ "http://127.0.0.1:3000", "http://localhost:3000" ]
 
+origins = [ "http://127.0.0.1:3000", "http://localhost:3000" ]
 
 # Configure FastAPI to allow requests from web
 app.add_middleware(
     CORSMiddleware,
-    allow_origins       = settings,
+    allow_origins       = origins,
     allow_credentials   = True,
     allow_methods       = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS" ),
     allow_headers       = [ "*" ]
 )
 
-@app.get( "/", tags=["root"] )
+@app.get( "/", tags=["status_check"] )
 async def read_root() -> list:
     return [
         {"f_name" : "hello", "l_name" : "world" },
@@ -25,7 +25,7 @@ async def read_root() -> list:
     ]
     
 
-@app.get( "/items/{items_id}" ) 
+@app.get( "/items/{items_id}", tags=["status_check"] ) 
 async def read_item( items_id: int ):
     return { "items_id" : items_id }
 
