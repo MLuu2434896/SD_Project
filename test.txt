@@ -1,3 +1,6 @@
+<div> Generic container for flow content </div>
+	- Usually used to group content so it can be easily styled
+
 <p> Paragraph Tag </p>
 
 <h1> Heading tags 1-6 </h1-6>
@@ -19,9 +22,33 @@
 	- Usually use with src
 	- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
 
+<area> Set an area of an img map </area>
+	- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/area
+
+<map> Define an img map (a clickable area) </map>
+	- Usually use with <area> & href tags
+
 <object> Represents an external resource </object>
 	- Need to specify type, data, width, height
 
+<ul> Unordered list </ul>
+	- Usually rendered as a bulleted list
+	- Often use with <li> tag
+
+<ol> Ordered list </ol>
+	- Rendered as a numbered list
+
+<li> Represents an item in the list </li>
+	- Must be contained w/in <ul>, <ol>, or <menu>
+
+<dl> Description list </dl>
+	- Encloses <dt> and <dd> elements
+	- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
+
+<fieldset> Used to group several controls & labels <fieldset>
+	- Often used with <label> and <input>
+
+<label> A caption for an item in UI </label>
 
 Working with new features:
 	- Create a new branch for new features in local repo
@@ -29,4 +56,4 @@ Working with new features:
 	- If you're the owner of the remote repo, click on compare pull requests and if ok, merge it to main using web and delete the added 		newly added branch
 	- After successfully merged, move back to main in local branch to delete newly developed features if you want, or you can keep it 
 		for feature testing and restore point
-	- Do a 'git fetch --prune' to clean outdated branches on local repo
+	- Do a 'git fetch --prune' to clean up outdated branches.
