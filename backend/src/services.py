@@ -1,21 +1,27 @@
 import bcrypt, database, models
 import schemas as Schemas
+import jwt as JWT
+import services as Services
+from fastapi import Depends, HTTPException
+from constants import JWT_KEY, OAUTH_2_SCHEMA, JWT_ALGORITHM
 from sqlalchemy.orm import Session
 
 
-def verify_password( password: bytes, hashed_password: bytes ) -> bool:
+def verify_password( password: str, db_password: bytes ) -> bool:
     '''
     Check whether hashed password and inputted password are the same.
     Passwords must be converted into bytes before hashing.
 
     @PARA
-    password: bytes -> a string of password in byte form\n
-    hashed_password: bytes -> the hashed password
+    password: str -> a string of password\n
+    db_password: str -> the hashed password in bytes form, stored in the database
 
     @RETURN
     is_matched: bool
     '''
-    is_matched = bcrypt.checkpw( password, hashed_password )
+    user_password = password.encode( "utf-8" )
+
+    is_matched = bcrypt.checkpw( user_password, db_password )
     return is_matched
 
 def hash_password( password: str ) -> bytes:
@@ -24,7 +30,6 @@ def hash_password( password: str ) -> bytes:
 
     hashed_pw = bcrypt.hashpw( password_in_bytes, salt )
     return hashed_pw
-
 
 def create_db():
     return database.Base.metadata.create_all( bind=database.engine )
@@ -38,6 +43,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
 
 async def get_user_by_email( email: str, db: Session ):
     '''
@@ -83,3 +90,32 @@ async def create_user( user: Schemas.EmployeeCreate, db: Session ):
     db.refresh( temp_user )
 
     return temp_user
+
+async def authenticate_user( email: str, password: str, db: Session ):
+    user = await get_user_by_email( email, db )
+
+    if not user: 
+        return False
+    
+    if not verify_password( password, user.hashed_password ):
+        return False
+    
+    return user
+
+async def create_token( user: models.Employee ):
+    temp_user = Schemas.Employee.from_orm( user )
+
+    token = JWT.encode( temp_user.dict(), JWT_KEY )
+
+    return dict( access_token=token, token_type="bearer" )
+    
+async def get_current_user( db: Session = Depends( Services.get_db ), 
+                            token: str = Depends( OAUTH_2_SCHEMA ) ):
+    try:
+        payload = JWT.decode( token, key=JWT_KEY, algorithms=[JWT_ALGORITHM] )
+        user = db.query( models.Employee ).get( payload["id"] )
+    except:
+        raise HTTPException( status_code=401, 
+                             detail="Invalid email or password!"
+                               )
+    return Schemas.Employee.from_orm( user )

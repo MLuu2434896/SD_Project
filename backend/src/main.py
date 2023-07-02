@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, security
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import uvicorn
@@ -43,6 +43,9 @@ async def show_users( db: Session = Depends( Services.get_db ) ):
     '''
     return await Services.get_all_users( db )
 
+@app.get( "/api/show_user/me", tags=["users"], response_model=Schemas.Employee )
+async def show_current_user( user: Schemas.Employee = Depends( Services.get_current_user ) ):
+    return user
 
 @app.post( "/api/create_user", tags=["users"] )
 async def create_user( user: Schemas.EmployeeCreate, 
@@ -71,6 +74,20 @@ async def create_user( user: Schemas.EmployeeCreate,
     # If no user is found in the database, register a new user
     return await Services.create_user( user, db )
 
+@app.post( "/api/token", tags=["users"] )
+async def generate_token( form_data: security.OAuth2PasswordRequestForm = Depends(),
+                          db: Session = Depends( Services.get_db ) ):
+    user = await Services.authenticate_user( form_data.username, form_data.password, db )
+    if not user: 
+        raise HTTPException( 
+            status_code=401, detail="Invalid Credentials!"
+        )
+    
+    return await Services.create_token( user )
+
+@app.delete( "api/delete_user/{user_id}", tags=["users"] )
+async def delete_user( user_id: int, db: Session=Depends( Services.get_db ) ):
+    pass
 
 if __name__ == '__main__':
     uvicorn.run( "main:app", host="localhost", port=8000, reload=True )

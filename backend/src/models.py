@@ -9,7 +9,7 @@ class Employee( DB.Base ):
     __tablename__ = "employees"
     id = SQL.Column( SQL.Integer, primary_key=True, index=True )
     email = SQL.Column( SQL.String, unique=True, index=True )
-    hashed_password = SQL.Column( SQL.String )
+    hashed_password = SQL.Column( SQL.BINARY )
     is_active = SQL.Column( SQL.Boolean, default=True )
     first_name = SQL.Column( SQL.String )
     last_name = SQL.Column( SQL.String )
@@ -24,7 +24,7 @@ class Supervisor( DB.Base ):
     id = SQL.Column( SQL.Integer, primary_key=True, index=True )
     employee_id = SQL.Column( SQL.Integer, SQL.ForeignKey( "employees.id" ) )
     email = SQL.Column( SQL.String, unique=True )
-    hashed_password = SQL.Column( SQL.String )
+    hashed_password = SQL.Column( SQL.BINARY )
     first_name = SQL.Column( SQL.String )
     last_name = SQL.Column( SQL.String )
     date_created = SQL.Column( SQL.DateTime, default=datetime.now() )
