@@ -11,8 +11,8 @@ class Employee( DB.Base ):
     email = SQL.Column( SQL.String, unique=True, index=True )
     hashed_password = SQL.Column( SQL.BINARY )
     is_active = SQL.Column( SQL.Boolean, default=True )
-    first_name = SQL.Column( SQL.String )
-    last_name = SQL.Column( SQL.String )
+    first_name = SQL.Column( SQL.String, index=True )
+    last_name = SQL.Column( SQL.String, index=True )
     role = SQL.Column( SQL.String )
 
     # This will create a bidirectional relationship with other tables
@@ -20,15 +20,14 @@ class Employee( DB.Base ):
     supervisor = ORM.relationship( "Supervisor", back_populates="employees" )
 
 class Supervisor( DB.Base ):
+    # TODO: add project_id, role column to this table
     __tablename__ = "supervisors"
     id = SQL.Column( SQL.Integer, primary_key=True, index=True )
     employee_id = SQL.Column( SQL.Integer, SQL.ForeignKey( "employees.id" ) )
-    email = SQL.Column( SQL.String, unique=True )
-    hashed_password = SQL.Column( SQL.BINARY )
-    first_name = SQL.Column( SQL.String )
-    last_name = SQL.Column( SQL.String )
     date_created = SQL.Column( SQL.DateTime, default=datetime.now() )
-    role = SQL.Column( SQL.String )
+    first_name = SQL.Column( SQL.String, index=True )
+    last_name = SQL.Column( SQL.String, index=True )
+    email = SQL.Column( SQL.String, index=True )
 
     # This will create a bidirectional relationship with 'Employee' table
     employees = ORM.relationship( "Employee", back_populates="supervisor" )

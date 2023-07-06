@@ -119,3 +119,57 @@ async def get_current_user( db: Session = Depends( Services.get_db ),
                              detail="Invalid email or password!"
                                )
     return Schemas.Employee.from_orm( user )
+
+async def create_supervisor( supervisor: Schemas.SupervisorCreate,
+                             employee: Schemas.Employee, 
+                             db: Session ):
+    
+    # Create a supervisor whose id, LN, FN are taken from employee table since 
+    # a supervisor is one of the employees
+    temp_supervisor = models.Supervisor( **supervisor.dict(), 
+                                         employee_id=employee.id, 
+                                         first_name=employee.first_name, 
+                                         last_name=employee.last_name )
+    
+    db.add( temp_supervisor )
+    db.commit()
+    db.refresh( temp_supervisor )
+
+    return Schemas.Supervior.from_orm( temp_supervisor )
+
+async def get_supervisors( user: Schemas.Employee, db: Session ):
+    temp_supervisors = db.query( models.Supervisor ).filter_by( employee_id=user.id )
+
+    return list( map( Schemas.Supervior.from_orm, temp_supervisors ) )
+
+async def _supervisor_selector( supervisor_id: int, 
+                                user: Schemas.Employee, 
+                                db: Session ):
+    
+    employee = ( db.query( models.Supervisor )
+                  .filter_by( employee_id=user.id )
+                  .filter( models.Supervisor.id == supervisor_id )
+                  .first()
+    )
+
+    if employee is None: 
+        raise HTTPException( status_code=404, 
+                             detail="Supervior does not exist!" ) 
+    
+    return employee
+
+async def _employee_selector( employee_id: int, db: Session ):
+    
+    temp_employee = db.query( models.Employee ).filter( models.Employee.id==employee_id ).first()
+
+    if temp_employee is None:
+        raise HTTPException( status_code=404, 
+                             detail="Employee does not exist!" )
+    
+    return temp_employee
+
+async def delete_employee( employee_id: int, db: Session ):
+    temp_employee = await _employee_selector( employee_id, db )
+
+    db.delete( temp_employee )
+    db.commit()

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, security
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from typing import List
 import uvicorn
 import schemas as Schemas
 import services as Services
@@ -21,7 +22,7 @@ app.add_middleware(
     allow_headers       = [ "*" ]
 )
 
-# Test URL
+########## STATUS_CHECK ##########
 @app.get( "/", tags=["status_check"] )
 async def read_root() -> list:
     return [
@@ -30,24 +31,23 @@ async def read_root() -> list:
         {"f_name" : "sat", "l_name" : "sun" }
     ]
 
-# Test URL
 @app.get( "/items/{items_id}", tags=["status_check"] ) 
 async def read_item( items_id: int ):
     return { "items_id" : items_id }
 
-
-@app.get( "/api/show_users", tags=["users"] )
+########## EMPLOYEE ##########
+@app.get( "/api/show_users", tags=["employee"] )
 async def show_users( db: Session = Depends( Services.get_db ) ):
     '''
     Show all the users w/in the database
     '''
     return await Services.get_all_users( db )
 
-@app.get( "/api/show_user/me", tags=["users"], response_model=Schemas.Employee )
+@app.get( "/api/show_user/me", tags=["employee"], response_model=Schemas.Employee )
 async def show_current_user( user: Schemas.Employee = Depends( Services.get_current_user ) ):
     return user
 
-@app.post( "/api/create_user", tags=["users"] )
+@app.post( "/api/create_user", tags=["employee"] )
 async def create_user( user: Schemas.EmployeeCreate, 
                        db: Session = Depends( Services.get_db )
                     ):
@@ -66,15 +66,18 @@ async def create_user( user: Schemas.EmployeeCreate,
     # a user exists, raise a 404 error.
     # Wait til we're done getting the user in the db since get_user_by_email is an 
     # async function (refer to services.py).
-    temp_user = await Services.get_user_by_email( user.email, db )
+    db_user = await Services.get_user_by_email( user.email, db )
 
-    if temp_user:
-        raise HTTPException( status_code=404, detail="This email is already in use! Try a different email" )
+    if db_user:
+        raise HTTPException( status_code=400, detail="This email is already in use! Try a different email" )
     
     # If no user is found in the database, register a new user
-    return await Services.create_user( user, db )
+    temp_user = await Services.create_user( user, db )
+    
+    # Once a user is created, automatically authorize that user
+    return await Services.create_token( temp_user )
 
-@app.post( "/api/token", tags=["users"] )
+@app.post( "/api/token", tags=["employee"] )
 async def generate_token( form_data: security.OAuth2PasswordRequestForm = Depends(),
                           db: Session = Depends( Services.get_db ) ):
     user = await Services.authenticate_user( form_data.username, form_data.password, db )
@@ -85,9 +88,28 @@ async def generate_token( form_data: security.OAuth2PasswordRequestForm = Depend
     
     return await Services.create_token( user )
 
-@app.delete( "api/delete_user/{user_id}", tags=["users"] )
+@app.delete( "/api/delete_user/{user_id}", tags=["employee"] )
 async def delete_user( user_id: int, db: Session=Depends( Services.get_db ) ):
-    pass
+    await Services.delete_employee( employee_id=user_id, db=db )
+    return { "message": "Successfully deleted" }
+
+########## LEAD ##########
+@app.post( "/api/create_supervisor", tags=["supervisor"], response_model=Schemas.Supervior )
+async def create_supervisor( supervisor: Schemas.SupervisorCreate, 
+                             employee: Schemas.Employee = Depends( Services.get_current_user ),
+                             db: Session = Depends( Services.get_db ) ):
+    # Create a lead iff a user is authorized
+
+    temp_supervisor = await Services.create_supervisor( supervisor=supervisor, 
+                                                        employee=employee,
+                                                        db=db )
+    return temp_supervisor
+
+@app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervior ] )
+async def show_leads( employee: Schemas.Employee = Depends( Services.get_current_user ),
+                      db: Session = Depends( Services.get_db ) ):
+    return await Services.get_supervisors( user=employee, db=db )
+
 
 if __name__ == '__main__':
     uvicorn.run( "main:app", host="localhost", port=8000, reload=True )
