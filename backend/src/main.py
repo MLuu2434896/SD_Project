@@ -41,7 +41,8 @@ async def show_users( db: Session = Depends( Services.get_db ) ):
     '''
     Show all the users w/in the database
     '''
-    return await Services.get_all_users( db )
+    employees = await Services.get_all_users( db )
+    return employees
 
 @app.get( "/api/show_user/me", tags=["employee"], response_model=Schemas.Employee )
 async def show_current_user( user: Schemas.Employee = Depends( Services.get_current_user ) ):
@@ -94,22 +95,39 @@ async def delete_user( user_id: int, db: Session=Depends( Services.get_db ) ):
     return { "message": "Successfully deleted" }
 
 ########## LEAD ##########
-@app.post( "/api/create_supervisor", tags=["supervisor"], response_model=Schemas.Supervior )
+@app.post( "/api/create_supervisor", tags=["supervisor"], response_model=Schemas.Supervisor )
 async def create_supervisor( supervisor: Schemas.SupervisorCreate, 
-                             employee: Schemas.Employee = Depends( Services.get_current_user ),
+                             # employee: Schemas.Employee = Depends( Services.get_current_user ),
                              db: Session = Depends( Services.get_db ) ):
-    # Create a lead iff a user is authorized
+    
+    # Get an employee with the id provided by the user.
+    # If an employee not found, throw a 404 HTTP exception,
+    # otherwise, create a new supervisor/lead with the provided id
+    temp_employee = await Services.get_user_by_id( id=supervisor.employee_id, db=db )
 
+    # Create a lead with the given id
     temp_supervisor = await Services.create_supervisor( supervisor=supervisor, 
-                                                        employee=employee,
+                                                        employee=temp_employee,
                                                         db=db )
+    # Return a supervisor object in json, similar to 
     return temp_supervisor
 
-@app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervior ] )
-async def show_leads( employee: Schemas.Employee = Depends( Services.get_current_user ),
-                      db: Session = Depends( Services.get_db ) ):
-    return await Services.get_supervisors( user=employee, db=db )
+# DEPRECATED
+# @app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervisor ] )
+# async def show_supervisors( employee: Schemas.Employee = Depends( Services.get_current_user ),
+#                       db: Session = Depends( Services.get_db ) ):
+#     # This function shows all the supervisors using the current user's id
+#     return await Services.get_supervisors( user=employee, db=db )
 
+@app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervisor ] )
+async def show_supervisors( db=Depends( Services.get_db ) ):
+    supervisors = await Services.get_all_supervisors( db )
+    return supervisors
+
+@app.delete( "/api/delete_supervisor/{supervisor_id}", tags=["supervisor"], status_code=200 )
+async def delete_supervisor( supervisor_id: int, db=Depends( Services.get_db ) ):
+    await Services.delete_supervisor( supervisor_id=supervisor_id, db=db )
+    return { "message" : "Successfully deleted!"}
 
 if __name__ == '__main__':
     uvicorn.run( "main:app", host="localhost", port=8000, reload=True )

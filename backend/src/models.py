@@ -13,14 +13,13 @@ class Employee( DB.Base ):
     is_active = SQL.Column( SQL.Boolean, default=True )
     first_name = SQL.Column( SQL.String, index=True )
     last_name = SQL.Column( SQL.String, index=True )
-    role = SQL.Column( SQL.String )
+    role = SQL.Column( SQL.Integer, index=True, default=0 )
 
     # This will create a bidirectional relationship with other tables
     # specified in the parameters
     supervisor = ORM.relationship( "Supervisor", back_populates="employees" )
 
 class Supervisor( DB.Base ):
-    # TODO: add project_id, role column to this table
     __tablename__ = "supervisors"
     id = SQL.Column( SQL.Integer, primary_key=True, index=True )
     employee_id = SQL.Column( SQL.Integer, SQL.ForeignKey( "employees.id" ) )
@@ -31,4 +30,6 @@ class Supervisor( DB.Base ):
 
     # This will create a bidirectional relationship with 'Employee' table
     employees = ORM.relationship( "Employee", back_populates="supervisor" )
+
+#TODO: add an another table that keeps track of all the projects within the company. Must have employee_id and supervisor_id
 
