@@ -36,7 +36,7 @@ async def read_item( items_id: int ):
     return { "items_id" : items_id }
 
 ########## EMPLOYEE ##########
-@app.get( "/api/show_users", tags=["employee"] )
+@app.get("/api/show_users", tags=["employee"] )
 async def show_users( db: Session = Depends( Services.get_db ) ):
     '''
     Show all the users w/in the database

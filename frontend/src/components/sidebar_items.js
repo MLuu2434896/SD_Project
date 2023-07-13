@@ -11,5 +11,9 @@ export const sidebarItems =
         {
             "item_name" : "About",
             "link" : "/about"
+        },
+        {
+            "item_name" : "Database Input",
+            "link" : "/DBTesting"
         }
     ]
