@@ -48,7 +48,7 @@ const DatabaseInterface = () => {
                 <label> Database Query: </label>
                 <form onSubmit = {handleSubmit}>
                 <input outlinename="queryInput" type="text" value = {query} 
-                style = {{borderWidth: 1, borderColor: "black"}}
+                className="input_box"
                 onChange={(e) => setQuery(e.target.value)}></input>
                 <button
                     type="button"

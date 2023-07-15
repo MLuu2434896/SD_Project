@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
+import Login from "../components/Login";
 
 const Home = () => {
     // useState accepts a return type and returns a var in an object & a setter
@@ -40,6 +41,9 @@ const Home = () => {
                 onClick={ () => navigate( "/login" ) } >
                 Login
             </button>
+            <div>
+             <Login/>
+            </div>
         </>
     );
 }
