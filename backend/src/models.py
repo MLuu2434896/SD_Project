@@ -32,4 +32,11 @@ class Supervisor( DB.Base ):
     employees = ORM.relationship( "Employee", back_populates="supervisor" )
 
 #TODO: add an another table that keeps track of all the projects within the company. Must have employee_id and supervisor_id
+class Task( DB.Base ):
+    __tablename__ = "tasks"
+    task_id = SQL.Column( SQL.Integer, primary_key=True, index=True )
+    task_name = SQL.Column( SQL.String )
+    task_info = SQL.Column( SQL.String )
+    # sprint_id = SQL.Column( SQL.Integer, index=True )
 
+    employee_id = SQL.Column( SQL.Integer, SQL.ForeignKey( "employees.id" ) )

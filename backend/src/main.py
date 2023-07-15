@@ -129,5 +129,20 @@ async def delete_supervisor( supervisor_id: int, db=Depends( Services.get_db ) )
     await Services.delete_supervisor( supervisor_id=supervisor_id, db=db )
     return { "message" : "Successfully deleted!"}
 
+######### TASKS ##########
+@app.get( "/api/show_tasks", tags=["tasks"], response_model=List[ Schemas.Task ] )
+async def get_tasks_current_user( current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    tasks_db = await Services.get_tasks_current_user( current_employee=current_employee, 
+                                                      db=db )
+    
+    return tasks_db
+
+@app.post( "/api/create_task", tags=["tasks"], response_model=Schemas.Task )
+async def create_task( task: Schemas.TaskCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    task_obj = await Services.create_task( task=task, 
+                                          current_employee=current_employee, 
+                                          db=db )
+    return task_obj
+
 if __name__ == '__main__':
     uvicorn.run( "main:app", host="localhost", port=8000, reload=True )

@@ -39,3 +39,17 @@ class Supervisor( _SupervisorBase ):
 
     class Config:
         orm_mode = True
+
+class _TaskBase( Pydantic.BaseModel ):
+    task_name: str = Field( max_length=512 )
+    task_info: str = Field( max_length=1028 )
+
+class TaskCreate( _TaskBase ):
+    pass
+
+class Task( _TaskBase ):
+    employee_id: int = Field( ge=0 )
+    task_id: int = Field( ge=0 )
+
+    class Config:
+        orm_mode = True

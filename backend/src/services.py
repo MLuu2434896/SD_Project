@@ -267,3 +267,19 @@ async def delete_supervisor( supervisor_id: int, db: Session ):
 
     employee_db = await _employee_selector( temp_supervisor.employee_id, db )
     await _update_employee_role( employee_db, db, role=0 )
+
+async def create_task( task: Schemas.TaskCreate, current_employee: Schemas.Employee, db: Session ):
+    task_obj = models.Task( **task.dict(), 
+                             employee_id=current_employee.id )
+    
+    db.add( task_obj )
+    db.commit()
+    db.refresh( task_obj )
+
+    return Schemas.Task.from_orm( task_obj )
+
+async def get_tasks_current_user( current_employee: Schemas.Employee , db: Session ):
+    tasks_db = db.query( models.Task ) \
+                .filter( models.Task.employee_id==current_employee.id )
+    
+    return list( map( Schemas.Task.from_orm, tasks_db ) )
