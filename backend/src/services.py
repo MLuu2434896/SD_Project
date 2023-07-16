@@ -54,12 +54,25 @@ async def get_user_by_email( email: str, db: Session ):
 
     return db.query( models.Employee ).filter( models.Employee.email == email ).first()
 
+async def get_user_by_id( id: int, db: Session ):
+    employee_db =  db.query( models.Employee ).filter( models.Employee.id == id ).first()
+    if not employee_db:
+        raise HTTPException( status_code=404,
+                            detail="Employee does not exist!" )
+    return employee_db
+
 async def get_all_users( db: Session ):
     '''
     Shows all users w/in the database.\n
     same as SELECT * FROM EMPLOYEE\n
     '''
-    return db.query( models.Employee ).all()
+    employees = db.query( models.Employee ).all()
+    return list( map( Schemas.Employee.from_orm, employees ) )
+
+async def get_all_supervisors( db: Session ):
+    # Getting all the supervisors from the database as a list
+    supervisors = db.query( models.Supervisor ).all()
+    return list( map( Schemas.Supervisor.from_orm, supervisors ) )
 
 async def create_user( user: Schemas.EmployeeCreate, db: Session ):
     '''
@@ -81,8 +94,7 @@ async def create_user( user: Schemas.EmployeeCreate, db: Session ):
     temp_user = models.Employee( email=user.email,
                                  hashed_password=temp_hashed_password,
                                  first_name=user.first_name,
-                                 last_name=user.last_name,
-                                 role=user.role )
+                                 last_name=user.last_name )
 
     # Add to database
     db.add( temp_user )
@@ -123,43 +135,116 @@ async def get_current_user( db: Session = Depends( Services.get_db ),
 async def create_supervisor( supervisor: Schemas.SupervisorCreate,
                              employee: Schemas.Employee, 
                              db: Session ):
+    '''
+    Create a supervisor whose id, LN, FN are taken from employee table since 
+    a supervisor is one of the employees.
+
+    Parameters
+    ----------
+    supervisor : schemas.SupervisorCreate
+        A template that represents user's inputs and is used to create a supervisor.\n
+    employee : schemas.Employee
+        An employee object that's retrieved from the database.\n
+    db : Session
+        A database session.\n
+
+    Returns
+    -----------
+    Supervisor : schemas.Supervisor
+        The newly created supervisor.
     
-    # Create a supervisor whose id, LN, FN are taken from employee table since 
-    # a supervisor is one of the employees
-    temp_supervisor = models.Supervisor( **supervisor.dict(), 
-                                         employee_id=employee.id, 
+    '''
+    temp_supervisor = models.Supervisor( **supervisor.dict(),
                                          first_name=employee.first_name, 
-                                         last_name=employee.last_name )
+                                         last_name=employee.last_name,
+                                         email=employee.email )
     
     db.add( temp_supervisor )
     db.commit()
     db.refresh( temp_supervisor )
 
-    return Schemas.Supervior.from_orm( temp_supervisor )
+    # Update the role of a particular employee after making him/her a supervisor
+    await _update_employee_role( employee, db, role=1 )
+
+    return Schemas.Supervisor.from_orm( temp_supervisor )
+
+async def _update_employee_role( employee: Schemas.Employee, db: Session, *, role: int ):
+    '''
+    Updates the role of a specific employee once he/she gets promoted/demoted.
+    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file.
+
+    Parameters
+    ----------
+    employee : Schemas.Employee
+        An employee retrieved from the db.
+    db : Session
+        A database session.
+    role : int - must be specified whenever this function is called
+
+    Returns
+    ----------
+    None
+    '''
+    employee_db = await _employee_selector( employee_id=employee.id, db=db )
+    employee_db.role = role
+    
+    # Update the role of that employee in the db
+    db.commit()
+    db.refresh( employee_db )
 
 async def get_supervisors( user: Schemas.Employee, db: Session ):
     temp_supervisors = db.query( models.Supervisor ).filter_by( employee_id=user.id )
 
     return list( map( Schemas.Supervior.from_orm, temp_supervisors ) )
 
-async def _supervisor_selector( supervisor_id: int, 
-                                user: Schemas.Employee, 
-                                db: Session ):
-    
-    employee = ( db.query( models.Supervisor )
-                  .filter_by( employee_id=user.id )
-                  .filter( models.Supervisor.id == supervisor_id )
-                  .first()
-    )
+async def _supervisor_selector( supervisor_id: int, db: Session ):
+    '''
+    Use to query a particular supervisor using the provided supervisor id.
+    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file.
 
-    if employee is None: 
-        raise HTTPException( status_code=404, 
-                             detail="Supervior does not exist!" ) 
+    Parameters
+    ----------
+    supervisor_id : int
+        The assigned ID of a supervisor when first created.
+    db : Session
+        A database session.
     
-    return employee
+    Returns
+    ----------
+    temp_supervisor : Schemas.Supervisor
+        A supervisor object retrieved from the database.
+    '''
+
+    # Find a supervisor with a the given id.
+    # If not exist, throw a 404 HTTP exception, otherwise return an supervisor object.
+    temp_supervisor = db.query( models.Supervisor ).filter( models.Supervisor.id == supervisor_id ).first()
+
+    if temp_supervisor is None: 
+        raise HTTPException( status_code=404, 
+                             detail="Supervisor does not exist!" ) 
+    
+    return temp_supervisor
 
 async def _employee_selector( employee_id: int, db: Session ):
+    '''
+    Use to query a particular employee using the provided employee id.
+    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file. 
+
+    Parameters
+    ----------
+    employee_id : int
+        The assigned ID of an employee when first created.
+    db : Session
+        A database session.
     
+    Returns
+    ----------
+    temp_employee : Schemas.Employees
+        An employee object retrieved from the database.
+    '''
+
+    # Find an employee with a the given id.
+    # If not exist, throw a 404 HTTP exception, otherwise return an employee object.
     temp_employee = db.query( models.Employee ).filter( models.Employee.id==employee_id ).first()
 
     if temp_employee is None:
@@ -173,3 +258,28 @@ async def delete_employee( employee_id: int, db: Session ):
 
     db.delete( temp_employee )
     db.commit()
+
+async def delete_supervisor( supervisor_id: int, db: Session ):
+    temp_supervisor = await _supervisor_selector( supervisor_id, db )
+
+    db.delete( temp_supervisor )
+    db.commit()
+
+    employee_db = await _employee_selector( temp_supervisor.employee_id, db )
+    await _update_employee_role( employee_db, db, role=0 )
+
+async def create_task( task: Schemas.TaskCreate, current_employee: Schemas.Employee, db: Session ):
+    task_obj = models.Task( **task.dict(), 
+                             employee_id=current_employee.id )
+    
+    db.add( task_obj )
+    db.commit()
+    db.refresh( task_obj )
+
+    return Schemas.Task.from_orm( task_obj )
+
+async def get_tasks_current_user( current_employee: Schemas.Employee , db: Session ):
+    tasks_db = db.query( models.Task ) \
+                .filter( models.Task.employee_id==current_employee.id )
+    
+    return list( map( Schemas.Task.from_orm, tasks_db ) )
