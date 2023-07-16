@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-    const [token, setToken] = useState(localStorage.getItem("Token"));
+    const [token, setToken] = useState(localStorage.getItem("awesomeCaptainToken"));
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -15,14 +15,13 @@ export const UserProvider = (props) => {
                 },
             };
 
-
-            const response = await fetch("/api/users/me", requestOptions);
+            const response = await fetch("http://localhost:8000/api/show_user/me", requestOptions);
 
             if (!response.ok) {
                 setToken(null);
             }
 
-                localStorage.setItem("Token", token);
+                localStorage.setItem("awesomeCaptainToken", token);
         };
         fetchUser();
     }, [token]);

@@ -23,7 +23,7 @@ const Register = () => {
         };
 
             const response = await fetch("http://localhost:8000/api/create_user", requestOptions);                      
-            const data = await response.json;                                                       //Returns either an empty string (success) or an error message
+            const data = await response.json();                                                       //Returns either an empty string (success) or an error message
 
             if (!response.ok){
                 setErrorMessage(data.detail);

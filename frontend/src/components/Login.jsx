@@ -2,14 +2,14 @@ import React, { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useState, useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage";
-
+import EntryPage from "../pages/EntryPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [, setToken] = useContext(UserContext);
-
+    const [token, setToken] = useContext(UserContext);
 
     const submitLogin = async() => {
     const requestOptions = {
@@ -20,7 +20,7 @@ const Login = () => {
     };
 
         const response = await fetch("http://localhost:8000/api/token", requestOptions);                      
-        const data = await response.json;                                                       //Returns either an empty string (success) or an error message
+        const data = await response.json();                                                       //Returns either an empty string (success) or an error message
 
         if (!response.ok){
             setErrorMessage(data.detail);
@@ -36,6 +36,8 @@ const Login = () => {
 
    return(
     <div className="column">
+
+        {!token ? (
         <form className="box" onSubmit={handleSubmit}>
             <h1 className = "title has-text-centered">Login Module w/o styling</h1>
             <div className="field">
@@ -59,13 +61,18 @@ const Login = () => {
                 Login Button
             </button>
         </form>
+
+        ) : (
+            <p>words</p>
+            //<EntryPage id = {token}/>
+        )}
         <br></br>
 
-        Current Form Input Values
-        <br></br>
-        {email}
-        <br />
-        {password} 
+        {!token ? (
+            <div className="columns">Not Logged in</div>
+        ) : (
+        <p> You did log in congrats </p> 
+        )}
     </div>
    )
 }
