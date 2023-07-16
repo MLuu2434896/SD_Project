@@ -13,7 +13,15 @@ export const sidebarItems =
             "link" : "/about"
         },
         {
-            "item_name" : "Database Input",
+            "item_name" : "Database Interface",
             "link" : "/DBTesting"
+        },
+        {
+            "item_name" : "login Module",
+            "link" : "/loginModule"
+        },
+        {
+            "item_name" : "Registration Module",
+            "link" : "/reg"
         }
     ]
