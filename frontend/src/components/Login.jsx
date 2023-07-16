@@ -10,6 +10,11 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [token, setToken] = useContext(UserContext);
+    const [firstname, setFirstName] = useState("");
+    const [lastname, setLastName] = useState("");
+    const [role, setRole] = useState("");
+    var userCookie = "";
+
 
     const submitLogin = async() => {
     const requestOptions = {
@@ -26,12 +31,32 @@ const Login = () => {
             setErrorMessage(data.detail);
         }else{
             setToken(data.access_token);
+            console.log("The token is: " + data.access_token);
+            userCookie = data.access_token;
+            GetMyInfo();
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         submitLogin();
+    }
+
+    const GetMyInfo = async() => {
+        const requestOptions = {
+            method: "GET",
+            headers: {"Content-Type": "application/json",
+                       Authorization: "Bearer " + userCookie,
+            }
+        };
+
+        const response = await fetch("http://localhost:8000/api/show_user/me", requestOptions);                      
+        const data = await response.json();                                                       //Returns either an empty string (success) or an error message
+
+        console.log(data);
+        setFirstName(data.first_name);          //Highlights how we must parse JSON object from fast_api
+        setLastName(data.last_name);
+        setRole(data.role);
     }
 
    return(
@@ -63,15 +88,18 @@ const Login = () => {
         </form>
 
         ) : (
-            <p>words</p>
+            <p>Welcome {role} {firstname} {lastname}</p>
             //<EntryPage id = {token}/>
         )}
         <br></br>
 
         {!token ? (
             <div className="columns">Not Logged in</div>
-        ) : (
-        <p> You did log in congrats </p> 
+        ) : ( 
+            <div>
+        <p> You did log in congrats </p>
+        <h1> Now you need to got to INSPECT (Browser) -> Application -> Local Storage -> Reset key to go back </h1> 
+            </div>
         )}
     </div>
    )

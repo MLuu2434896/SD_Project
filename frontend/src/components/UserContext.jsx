@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 
-export const UserContext = createContext();
 
 export const UserProvider = (props) => {
     const [token, setToken] = useState(localStorage.getItem("awesomeCaptainToken"));
@@ -32,3 +31,5 @@ export const UserProvider = (props) => {
         </UserContext.Provider>
     )
 };
+
+export const UserContext = createContext();
