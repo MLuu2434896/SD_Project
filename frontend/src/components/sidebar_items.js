@@ -11,5 +11,17 @@ export const sidebarItems =
         {
             "item_name" : "About",
             "link" : "/about"
+        },
+        {
+            "item_name" : "Database Interface",
+            "link" : "/DBTesting"
+        },
+        {
+            "item_name" : "login Module",
+            "link" : "/loginModule"
+        },
+        {
+            "item_name" : "Registration Module",
+            "link" : "/reg"
         }
     ]

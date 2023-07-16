@@ -42,3 +42,8 @@
     background: transparent;
     background-color: hsl(205, 71%, 74%);
 }
+
+.input_box{
+    border-width: thin;
+    border-color: black;
+}
