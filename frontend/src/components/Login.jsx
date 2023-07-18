@@ -16,6 +16,7 @@ const Login = () => {
     var userCookie = "";
 
 
+
     const submitLogin = async() => {
     const requestOptions = {
         method: "POST",
@@ -23,17 +24,14 @@ const Login = () => {
         body: JSON.stringify('grant_type=&username='+ email + '&password=' + password + '&scope=&client_id=&client_secret='
         ),
     };
-
         const response = await fetch("http://localhost:8000/api/token", requestOptions);                      
         const data = await response.json();                                                       //Returns either an empty string (success) or an error message
-
         if (!response.ok){
             setErrorMessage(data.detail);
         }else{
             setToken(data.access_token);
             console.log("The token is: " + data.access_token);
             userCookie = data.access_token;
-            GetMyInfo();
         }
     };
 
@@ -41,29 +39,37 @@ const Login = () => {
         e.preventDefault();
         submitLogin();
     }
-
-    const GetMyInfo = async() => {
         const requestOptions = {
             method: "GET",
             headers: {"Content-Type": "application/json",
-                       Authorization: "Bearer " + userCookie,
+                       Authorization: "Bearer " + token,
             }
         };
+        useEffect(() => {                                                   // Was GetMyInfo previously
+            fetch("http://localhost:8000/api/show_user/me", requestOptions)
+            .then(res => {
+                return res.json();
+            })                      
+            .then(data => {
+                console.log(data);
+                setFirstName(data.first_name);          //Highlights how we must parse JSON object from fast_api
+                setLastName(data.last_name);
+                setRole(data.role);
+            })
+            .catch(e => {
+                console.log("show_me request denied");
+            })
+        }, []);
 
-        const response = await fetch("http://localhost:8000/api/show_user/me", requestOptions);                      
-        const data = await response.json();                                                       //Returns either an empty string (success) or an error message
-
-        console.log(data);
-        setFirstName(data.first_name);          //Highlights how we must parse JSON object from fast_api
-        setLastName(data.last_name);
-        setRole(data.role);
-    }
 
    return(
     <div className="column">
 
         {!token ? (
+            
         <form className="box" onSubmit={handleSubmit}>
+            <div className="columns">Not Logged in</div>
+
             <h1 className = "title has-text-centered">Login Module w/o styling</h1>
             <div className="field">
                 <label className="label">Email Address</label>
@@ -88,20 +94,14 @@ const Login = () => {
         </form>
 
         ) : (
-            <p>Welcome {role} {firstname} {lastname}</p>
-            //<EntryPage id = {token}/>
-        )}
-        <br></br>
-
-        {!token ? (
-            <div className="columns">Not Logged in</div>
-        ) : ( 
             <div>
-        <p> You did log in congrats </p>
-        <h1> Now you need to got to INSPECT (Browser) -> Application -> Local Storage -> Reset key to go back </h1> 
+                <p>Welcome {firstname} {lastname}</p>
+                <p> You managed to overcome password hell. Congrats </p>
             </div>
         )}
+
     </div>
+    
    )
 }
 

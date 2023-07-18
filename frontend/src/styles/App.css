@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.App {
-  text-align: center;
+.Header {
+  text-align: center; 
 }
 
 .App-logo {

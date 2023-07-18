@@ -1,11 +1,12 @@
 .LoginPage {
     width: 100svw;
     height: 100svh;
+    display: flex;
 }
 
 .sidebar_container {
-    width: 30%;
-    height: 100%;
+    width: auto;
+    height: auto;       /*Was 100% originally*/
     background-color: aquamarine;
     z-index: -1;
     top: 0;
@@ -17,7 +18,7 @@
 }
 
 .sidebar_on {
-    width: 30%;
+    width: 20%;
 }
 
 .sidebar_off {
@@ -41,6 +42,14 @@
     right: 3rem;
     background: transparent;
     background-color: hsl(205, 71%, 74%);
+}
+
+.logout_btn {
+    position: fixed;
+    top: 4rem;
+    right: 3rem;
+    background: transparent;
+    background-color: hsl(0, 84%, 75%);
 }
 
 .input_box{

@@ -8,3 +8,9 @@
     background-color: antiquewhite;
     padding: 10px;
 }
+
+.entryHandler {
+    display: flex;
+    background-color: rgb(227, 227, 232);       /*To help see it*/
+    justify-content: space-evenly;
+}

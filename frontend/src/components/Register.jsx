@@ -80,17 +80,6 @@ const Register = () => {
                     Register Button
                 </button>
             </form>
-            <br></br>
-
-            Current Form Input Values
-            <br></br>
-            {email}
-            <br />
-            {firstname}
-            <br />
-            {lastname}
-            <br />           
-            {password} 
         </div>
     )
 };
