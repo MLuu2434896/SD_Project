@@ -37,7 +37,7 @@ const Register = () => {
             submitRegistration();
         }
         else{
-            setErrorMessage("Emsure the password is greater than 1");
+            setErrorMessage("Ensure the password is greater than 1");
         }
     }
 

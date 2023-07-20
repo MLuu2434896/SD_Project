@@ -7,6 +7,8 @@ import Register from "../components/Register";
 import { UserContext } from "../components/UserContext";
 import React, { useContext } from "react";
 import LoginPage from "./LoginPage";
+import "../styles/login.css";
+
 
 
 const Home = () => {
@@ -47,31 +49,35 @@ const Home = () => {
                     <br />
                     5. "/reg" which renders White_Mages functional user registration module (Register) 
                     <br />
+                    6. "/chart" which will show just the burndown chart
+                    <br></br>
+                    7.  "/sprintpro" which will show just the sprint progress bar
+                    <br></br>
+                    8. "/tasks" which will show just the tasks element
+                    <br></br>
+                    9. "/progressbar" which will show the progress bar component
                     </h4>
                 </div>
         </div>
 
         <br></br>
         <hr></hr>
-
             <button className="logout_btn" 
                         onClick={ () => { setToken(null) } } >
                         Logout
-                </button>
+            </button>
         <div>
             
         {!token ? (                                                         //Conditional Renderer (1st if for no log in)
-            <div>Not Logged in
+            <div className="mainPage">Not Logged in
                 <div className="entryHandler">
                     <Login></Login>
                     <Register></Register>
                 </div>
             </div>
         ) : ( 
-            <div>
+            <div className ="LoginPageContainer">
                 <LoginPage></LoginPage>
-                Add Entry Page (redirection?) Here
-                <p> You did log in congrats </p>
             </div>
         )}
         </div>

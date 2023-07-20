@@ -6,7 +6,10 @@ import LoginPage from './pages/LoginPage';
 import DatabaseInterface from './pages/DatabaseInterface';
 import Register from './components/Register';
 import Login from './components/Login';
-
+import BurnDownChart from './components/BurnDownChart';
+import SprintProgress from './components/SprintProgress';
+import Tasks from './components/Tasks';
+import { ProgressBar } from './components/ProgressBar';
 
 function App() {
   return ( 
@@ -19,6 +22,10 @@ function App() {
         <Route exact path="/loginModule" element={<Login/>}></Route>
         <Route exact path="/DBTesting" element={<DatabaseInterface/>}></Route>
         <Route exact path="/reg" element={<Register/>}></Route>
+        <Route exact path="/chart" element={<BurnDownChart/>}></Route>
+        <Route exact path="/sprintpro" element={<SprintProgress/>}></Route>
+        <Route exact path="/tasks" element={<Tasks/>}></Route>
+        <Route exact path="/progressbar" element={<ProgressBar/>}></Route>
       </Routes>
     </BrowserRouter>
     </>

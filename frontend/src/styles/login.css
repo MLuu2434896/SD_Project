@@ -1,7 +1,21 @@
+.column{
+    width: 100%;
+    background-color: aliceblue;
+}
+
+.LoginPageContainer {
+    height: 20%;
+    text-align: center;
+}
+
+.mainPage{
+    width: 100%;
+}
 .LoginPage {
     width: 100svw;
     height: 100svh;
     display: flex;
+    
 }
 
 .sidebar_container {

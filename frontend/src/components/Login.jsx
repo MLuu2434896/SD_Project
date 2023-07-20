@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage";
 import EntryPage from "../pages/EntryPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "../styles/login.css";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -13,9 +14,6 @@ const Login = () => {
     const [firstname, setFirstName] = useState("");
     const [lastname, setLastName] = useState("");
     const [role, setRole] = useState("");
-    var userCookie = "";
-
-
 
     const submitLogin = async() => {
     const requestOptions = {
@@ -31,7 +29,6 @@ const Login = () => {
         }else{
             setToken(data.access_token);
             console.log("The token is: " + data.access_token);
-            userCookie = data.access_token;
         }
     };
 
@@ -45,7 +42,7 @@ const Login = () => {
                        Authorization: "Bearer " + token,
             }
         };
-        useEffect(() => {                                                   // Was GetMyInfo previously
+        useEffect(() => {                                                   // Was GetMyInfo previously (study this)
             fetch("http://localhost:8000/api/show_user/me", requestOptions)
             .then(res => {
                 return res.json();
@@ -97,11 +94,10 @@ const Login = () => {
             <div>
                 <p>Welcome {firstname} {lastname}</p>
                 <p> You managed to overcome password hell. Congrats </p>
+                <EntryPage></EntryPage>
             </div>
         )}
-
     </div>
-    
    )
 }
 

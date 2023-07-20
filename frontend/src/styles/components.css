@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.entryPage{
+    width: 100%;
+    height: 50%;
+}
+
+.container{
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 80%;
+    margin-top: 200px;
+}
+
+.ProgressBar{
+    width: 100%;
+    height: 30px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.ProgressBarFill{
+    height: 100%;
+    border-radius: 10px;
+    background-color: aqua;
+}
+
+.entryPageTopGuiFlexbox{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    justify-items: center;
+}
+
+.entryPageBottomGuiFlexbox{
+    display: flex;
+    justify-content: space-evenly;
+    justify-items: center;
+}
+
+.topLeftGuiElement{
+    background-color: rgb(159, 159, 255);       /*To help see it*/
+}
+
+.topRightGuiElement{
+    background-color: rgb(146, 206, 255);       /*To help see it*/
+}
+
+.bottomLeftGuiElement{
+    background-color: rgb(178, 246, 192);       /*To help see it*/
+}
+
+.bottomRightGuiElement{
+    background-color: rgb(153, 236, 132);       /*To help see it*/
+}
