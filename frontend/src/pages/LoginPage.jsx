@@ -3,6 +3,8 @@ import "../styles/login.css";
 import { sidebarItems } from "../components/sidebar_items";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
+import Login from "../components/Login";
+
 
 const Login_page = () => {
     const [ isOpen, setIsOpen ] = useState( false );
@@ -12,7 +14,6 @@ const Login_page = () => {
     const ShowItems = ( item ) =>
     {
         const [ showLink, setShowLink ] = useState( false );
-        
 
         return (
             <ul> 
@@ -24,7 +25,6 @@ const Login_page = () => {
                     {item.item_name} { showLink && <> { item.link } </> }
                 </li>
             </ul>
-            
         );
     };
 
@@ -35,6 +35,7 @@ const Login_page = () => {
                 <div className="sidebar_header"> Sidebar </div>
                 <div className="sidebar_list"> { sidebarItems.map( ShowItems ) } </div>
             </div>
+            
             <button className="sidebar_toggle_btn" 
                     onClick={ () => { setIsOpen( !isOpen ) } } >
                     Toggle 
