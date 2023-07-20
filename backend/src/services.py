@@ -56,7 +56,7 @@ async def get_user_by_email( email: str, db: Session ):
 
 async def get_user_by_id( id: int, db: Session ):
     employee_db =  db.query( models.Employee ).filter( models.Employee.id == id ).first()
-    if not employee_db:
+    if employee_db is None:
         raise HTTPException( status_code=404,
                             detail="Employee does not exist!" )
     return employee_db
@@ -268,9 +268,17 @@ async def delete_supervisor( supervisor_id: int, db: Session ):
     employee_db = await _employee_selector( temp_supervisor.employee_id, db )
     await _update_employee_role( employee_db, db, role=0 )
 
-async def create_task( task: Schemas.TaskCreate, current_employee: Schemas.Employee, db: Session ):
+async def create_task( sprint_id: int, task: Schemas.TaskCreate, current_employee: Schemas.Employee, db: Session ):
+    # Search DB using the provided sprint_id.
+    # Throw an 404 HTTP exception if not found.
+    # Otherwise, add a task to the provided sprint id.
+    sprint_db = await get_sprint_by_id( sprint_id=sprint_id,
+                                        current_employee=current_employee,
+                                        db=db )
+
+    # Add a task to the provided sprint_id.
     task_obj = models.Task( **task.dict(), 
-                             employee_id=current_employee.id )
+                             sprint_id=sprint_db.sprint_id )
     
     db.add( task_obj )
     db.commit()
@@ -278,8 +286,110 @@ async def create_task( task: Schemas.TaskCreate, current_employee: Schemas.Emplo
 
     return Schemas.Task.from_orm( task_obj )
 
-async def get_tasks_current_user( current_employee: Schemas.Employee , db: Session ):
+async def get_sprint_by_id( sprint_id: int, current_employee: Schemas.Employee, db: Session ):
+    sprint_db = db.query( models.Sprint ) \
+                    .filter(
+                            models.Sprint.employee_id == current_employee.id,
+                            models.Sprint.sprint_id == sprint_id
+                            ) \
+                    .first()
+    
+    if sprint_db is None:
+        raise HTTPException( status_code= 404, 
+                             detail="Sprint not found!" )
+    
+    return sprint_db
+
+async def get_sprint_tasks( sprint_id: int, current_employee: Schemas.Employee, db: Session ):
+    # Find a sprint in the DB using the given sprint_id.
+    # Throw a 404 HTTP exception if not found.
+    sprint_db = await get_sprint_by_id( sprint_id, current_employee, db )
+    
+    # If a sprint exists in the DB, get all tasks associated with the given sprint_id
     tasks_db = db.query( models.Task ) \
-                .filter( models.Task.employee_id==current_employee.id )
+                .filter( models.Task.sprint_id == sprint_db.sprint_id ) \
     
     return list( map( Schemas.Task.from_orm, tasks_db ) )
+    # return tasks_db
+
+async def create_sprint( sprint: Schemas.SprintCreate, current_employee: Schemas.Employee, db: Session ):
+    sprint_obj = models.Sprint( **sprint.dict(), 
+                                employee_id = current_employee.id )
+    
+    db.add( sprint_obj )
+    db.commit()
+    db.refresh( sprint_obj )
+
+    return Schemas.Sprint.from_orm( sprint_obj )
+
+async def show_sprints_current_user( current_employee: Schemas.Employee, db: Session ):
+    sprints_db = db.query( models.Sprint ) \
+                    .filter( models.Sprint.employee_id == current_employee.id ) \
+                    .all()
+    
+    return list( map( Schemas.Sprint.from_orm, sprints_db ) )
+
+async def delete_task( task_id: int, db: Session ):
+    task_db = await get_task_by_id( task_id, db )
+
+    db.delete( task_db )
+    db.commit()
+
+async def get_task_by_id( task_id: int, db: Session ):
+    task_db = db.query( models.Task ) \
+                .filter( models.Task.task_id == task_id ) \
+                .first()
+    
+    if task_db is None:
+        raise HTTPException( status_code=404, 
+                             detail="Task not found!" )
+    
+    return task_db
+
+async def delete_sprint( sprint_id: int, current_employee: Schemas.Employee, db: Session ):
+    sprint_db = await Services.get_sprint_by_id( sprint_id, current_employee, db )
+
+    # Find all tasks associated with the given sprint_id.
+    tasks_db = await Services.get_sprint_tasks( sprint_id=sprint_db.sprint_id,
+                                                current_employee=current_employee,
+                                                db=db )
+
+    # If no task found using the given, delete the sprint itself and return
+    if len( tasks_db ) == 0:
+        db.delete( sprint_db )
+        db.commit()
+        return
+    
+    # If there are tasks inside a sprint, delete all tasks.
+    for task in tasks_db:
+        await delete_task( task.task_id, db )
+
+    # Delete the sprint itself
+    db.delete( sprint_db )
+    db.commit()
+
+async def get_all_tasks( current_employee: Schemas.Employee, db: Session ):
+    current_user_sprints = await show_sprints_current_user( current_employee, db )
+    all_tasks_db = []
+
+    for sprint in current_user_sprints:
+        sprint_tasks_db = await get_sprint_tasks(sprint_id=sprint.sprint_id, 
+                                           current_employee=current_employee,
+                                           db=db )
+        
+        if len( sprint_tasks_db ) == 0:
+            continue 
+
+        all_tasks_db.extend( sprint_tasks_db )
+
+    return list( map( Schemas.Task.from_orm, all_tasks_db ) )
+
+async def set_complete_task( task_id: int, db: Session ):
+    task_db = await get_task_by_id( task_id=task_id, db=db )
+
+    task_db.is_complete = 1
+
+    db.commit()
+    db.refresh( task_db )
+
+    return task_db

@@ -40,16 +40,31 @@ class Supervisor( _SupervisorBase ):
     class Config:
         orm_mode = True
 
+class _SprintBase( Pydantic.BaseModel ):
+    sprint_name: str = Field( max_length=512 )
+
+class SprintCreate( _SprintBase ):
+    pass
+
+class Sprint( _SprintBase ):
+    sprint_id: int = Field( ge=0 )
+    start_date: datetime
+    employee_id: int = Field( ge=0 )
+
+    class Config:
+        orm_mode = True
+
 class _TaskBase( Pydantic.BaseModel ):
     task_name: str = Field( max_length=512 )
     task_info: str = Field( max_length=1028 )
+    # sprint_id: int = Field( ge=0 )
 
 class TaskCreate( _TaskBase ):
     pass
 
 class Task( _TaskBase ):
-    employee_id: int = Field( ge=0 )
     task_id: int = Field( ge=0 )
+    is_complete: int = Field( gt=-1, lt=2 )
 
     class Config:
         orm_mode = True
