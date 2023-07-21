@@ -19,7 +19,7 @@ const Register = () => {
         const requestOptions = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ email: email, first_name: firstname, last_name: lastname, role: role, hashed_password: password})
+            body: JSON.stringify({ email: email, first_name: firstname, last_name: lastname, hashed_password: password})
         };
 
             const response = await fetch("http://localhost:8000/api/create_user", requestOptions);                      
@@ -43,7 +43,7 @@ const Register = () => {
     }
 
     return(
-        <div className="column">
+        <div className="grid place-items-center">
             <form className="box" onSubmit={handleSubmit}>
                 <h1 className = "title has-text-centered">Registeration Module w/o styling</h1>
                 <div className="field">
@@ -66,14 +66,6 @@ const Register = () => {
                         <input type="text" placeholder="Enter last name" value = {lastname} onChange ={(e) => setLastName(e.target.value)} className = "input_box" required></input>
                     </div>
                 </div>
-
-                <div className="field">
-                    <label className="label">Role:</label>
-                    <div className="control">
-                        <input type="text" placeholder="Enter your role" value = {role} onChange ={(e) => setRole(e.target.value)} className = "input_box" required></input>
-                    </div>
-                </div>
-
                 <div className="field">
                     <label className="label">Password:</label>
                     <div className="control">

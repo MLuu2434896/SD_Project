@@ -8,6 +8,7 @@ import { UserContext } from "../components/UserContext";
 import React, { useContext } from "react";
 import LoginPage from "./LoginPage";
 import "../styles/login.css";
+import EntryPage from './EntryPage';
 
 
 
@@ -67,17 +68,17 @@ const Home = () => {
                         Logout
             </button>
         <div>
-            
-        {!token ? (                                                         //Conditional Renderer (1st if for no log in)
-            <div className="mainPage">Not Logged in
+        
+        { /* Show login Module if user is not signed in, otherwise move to dashboard page*/}
+        {!token ? (
+            <div className="grid place-items-center">Not Logged in
                 <div className="entryHandler">
                     <Login></Login>
-                    <Register></Register>
                 </div>
             </div>
         ) : ( 
             <div className ="LoginPageContainer">
-                <LoginPage></LoginPage>
+                <EntryPage></EntryPage>
             </div>
         )}
         </div>

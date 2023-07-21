@@ -3,8 +3,8 @@ import { UserContext } from "./UserContext";
 import { useState, useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage";
 import EntryPage from "../pages/EntryPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "../styles/login.css";
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -15,13 +15,16 @@ const Login = () => {
     const [lastname, setLastName] = useState("");
     const [role, setRole] = useState("");
 
+    const nagivate = useNavigate();
+
     const submitLogin = async() => {
-    const requestOptions = {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: JSON.stringify('grant_type=&username='+ email + '&password=' + password + '&scope=&client_id=&client_secret='
-        ),
-    };
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: JSON.stringify('grant_type=&username='+ email + '&password=' + password + '&scope=&client_id=&client_secret='
+            ),
+        };
+
         const response = await fetch("http://localhost:8000/api/token", requestOptions);                      
         const data = await response.json();                                                       //Returns either an empty string (success) or an error message
         if (!response.ok){
@@ -36,34 +39,33 @@ const Login = () => {
         e.preventDefault();
         submitLogin();
     }
-        const requestOptions = {
-            method: "GET",
-            headers: {"Content-Type": "application/json",
-                       Authorization: "Bearer " + token,
-            }
-        };
-        useEffect(() => {                                                   // Was GetMyInfo previously (study this)
-            fetch("http://localhost:8000/api/show_user/me", requestOptions)
-            .then(res => {
-                return res.json();
-            })                      
-            .then(data => {
-                console.log(data);
-                setFirstName(data.first_name);          //Highlights how we must parse JSON object from fast_api
-                setLastName(data.last_name);
-                setRole(data.role);
-            })
-            .catch(e => {
-                console.log("show_me request denied");
-            })
-        }, []);
+
+    const requestOptions = {
+        method: "GET",
+        headers: {"Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+        }
+    };
+
+    useEffect(() => {                                                   // Was GetMyInfo previously (study this)
+        fetch("http://localhost:8000/api/show_user/me", requestOptions)
+        .then(res => {
+            return res.json();
+        })                      
+        .then(data => {
+            console.log(data);
+            setFirstName(data.first_name);          //Highlights how we must parse JSON object from fast_api
+            setLastName(data.last_name);
+            setRole(data.role);
+        })
+        .catch(e => {
+            console.log("show_me request denied");
+        })
+    }, []);
 
 
    return(
     <div className="column">
-
-        {!token ? (
-            
         <form className="box" onSubmit={handleSubmit}>
             <div className="columns">Not Logged in</div>
 
@@ -85,18 +87,18 @@ const Login = () => {
             <ErrorMessage message = {errorMessage}></ErrorMessage>
 
             <br></br>
-            <button className="button is primary" type="submit">
-                Login Button
+            <button className="button is primary float-left" type="submit">
+                Login
             </button>
-        </form>
 
-        ) : (
-            <div>
-                <p>Welcome {firstname} {lastname}</p>
-                <p> You managed to overcome password hell. Congrats </p>
-                <EntryPage></EntryPage>
-            </div>
-        )}
+            { /* Register Button - will navigate user to "/registerPage" if clicked */ }
+            <button className="float-right"
+                    type="button"
+                    onClick={ () => { nagivate( "/registerPage" ) } }>
+                    Register
+            </button>
+
+        </form>
     </div>
    )
 }

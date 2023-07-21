@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import DatabaseInterface from './pages/DatabaseInterface';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -26,6 +27,7 @@ function App() {
         <Route exact path="/sprintpro" element={<SprintProgress/>}></Route>
         <Route exact path="/tasks" element={<Tasks/>}></Route>
         <Route exact path="/progressbar" element={<ProgressBar/>}></Route>
+        <Route exact path="/registerPage" element={<RegisterPage/>}> </Route>
       </Routes>
     </BrowserRouter>
     </>
