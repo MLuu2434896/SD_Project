@@ -112,13 +112,6 @@ async def create_supervisor( supervisor: Schemas.SupervisorCreate,
     # Return a supervisor object in json, similar to 
     return temp_supervisor
 
-# DEPRECATED
-# @app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervisor ] )
-# async def show_supervisors( employee: Schemas.Employee = Depends( Services.get_current_user ),
-#                       db: Session = Depends( Services.get_db ) ):
-#     # This function shows all the supervisors using the current user's id
-#     return await Services.get_supervisors( user=employee, db=db )
-
 @app.get( "/api/show_supervisors", tags=["supervisor"], response_model=List[ Schemas.Supervisor ] )
 async def show_supervisors( db=Depends( Services.get_db ) ):
     supervisors = await Services.get_all_supervisors( db )
@@ -130,19 +123,59 @@ async def delete_supervisor( supervisor_id: int, db=Depends( Services.get_db ) )
     return { "message" : "Successfully deleted!"}
 
 ######### TASKS ##########
-@app.get( "/api/show_tasks", tags=["tasks"], response_model=List[ Schemas.Task ] )
-async def get_tasks_current_user( current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
-    tasks_db = await Services.get_tasks_current_user( current_employee=current_employee, 
-                                                      db=db )
+@app.get( "/api/show_tasks/{sprint_id}", tags=["tasks"], response_model=List[ Schemas.Task ] )
+async def get_tasks_by_sprint_id( sprint_id: int, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    tasks_db = await Services.get_sprint_tasks( sprint_id=sprint_id,
+                                                current_employee=current_employee,
+                                                db=db )
     
     return tasks_db
 
-@app.post( "/api/create_task", tags=["tasks"], response_model=Schemas.Task )
-async def create_task( task: Schemas.TaskCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
-    task_obj = await Services.create_task( task=task, 
-                                          current_employee=current_employee, 
-                                          db=db )
+@app.post( "/api/create_task/{sprint_id}", tags=["tasks"], response_model=Schemas.Task )
+async def create_task( sprint_id: int, task: Schemas.TaskCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    task_obj = await Services.create_task( sprint_id=sprint_id, 
+                                           task=task, 
+                                           current_employee=current_employee, 
+                                           db=db )
     return task_obj
+
+@app.delete( "/api/delete_task/{task_id}", tags=["tasks"], status_code=200 )
+async def delete_task( task_id: int, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    await Services.delete_task( task_id=task_id, 
+                                db=db )
+    return { "message": "Successfully deleted a task!" }
+
+@app.get( "/api/show_all_tasks", tags=["tasks"], response_model=List[ Schemas.Task ] )
+async def show_all_tasks_current_user( current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    tasks_db = await Services.get_all_tasks( current_employee=current_employee, 
+                                             db=db )
+
+    return tasks_db
+
+@app.post( "/api/complete_task/{task_id}", tags=["tasks"], response_model=Schemas.Task )
+async def set_complete_task( task_id: int, db=Depends( Services.get_db ) ):
+    updated_task = await Services.set_complete_task( task_id=task_id, db=db )
+    return updated_task
+
+########## SPRINTS ##########
+@app.post( "/api/create_sprint", tags=["sprints"], response_model=Schemas.Sprint )
+async def create_sprint( sprint: Schemas.SprintCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    sprint_obj = await Services.create_sprint( sprint=sprint, 
+                                        current_employee=current_employee, 
+                                        db=db )
+    return sprint_obj
+
+@app.get( "/api/show_sprints", tags=["sprints"], response_model=List[ Schemas.Sprint ] )
+async def show_sprints_current_user( current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    sprints_db = await Services.show_sprints_current_user( current_employee=current_employee, 
+                                                     db=db )
+    
+    return sprints_db
+
+@app.delete( "/api/delete_sprint/{sprint_id}", tags=["sprints"], status_code=200 )
+async def delete_sprint( sprint_id: int, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    await Services.delete_sprint( sprint_id=sprint_id, current_employee=current_employee, db=db )
+    return {"message": "Successfully deleted a sprint!" }
 
 if __name__ == '__main__':
     uvicorn.run( "main:app", host="localhost", port=8000, reload=True )
