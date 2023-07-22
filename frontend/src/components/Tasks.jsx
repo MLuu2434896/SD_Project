@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useState, useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage";
-import EntryPage from "../pages/EntryPage";
+import EntryPage from "../pages/DashBoardPage";
 import { useNavigate } from "react-router-dom"
 import { useTable } from "react-table"
 

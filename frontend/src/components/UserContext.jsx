@@ -20,8 +20,9 @@ export const UserProvider = (props) => {
                 setToken(null);
             }
 
-                localStorage.setItem("awesomeCaptainToken", token);
+            localStorage.setItem("awesomeCaptainToken", token);
         };
+
         fetchUser();
     }, [token]);
 

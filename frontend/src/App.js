@@ -11,6 +11,7 @@ import BurnDownChart from './components/BurnDownChart';
 import SprintProgress from './components/SprintProgress';
 import Tasks from './components/Tasks';
 import { ProgressBar } from './components/ProgressBar';
+import DashBoardPage from './pages/DashBoardPage';
 
 function App() {
   return ( 
@@ -27,7 +28,8 @@ function App() {
         <Route exact path="/sprintpro" element={<SprintProgress/>}></Route>
         <Route exact path="/tasks" element={<Tasks/>}></Route>
         <Route exact path="/progressbar" element={<ProgressBar/>}></Route>
-        <Route exact path="/registerPage" element={<RegisterPage/>}> </Route>
+        <Route exact path="/register" element={<RegisterPage/>}> </Route>
+        <Route exact path="/dashboard" element={<DashBoardPage/>}> </Route>
       </Routes>
     </BrowserRouter>
     </>
