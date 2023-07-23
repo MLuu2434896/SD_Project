@@ -19,7 +19,7 @@ const DashBoardPage = () => {
    return(
         <div>
             <br></br>
-            <h1> This is entry page </h1>
+            <h1 className="text-center"> This is the dashboard page </h1>
             <div className="grid place-content-end mr-16">
                 <button onClick={ handleLogout }>
                         Logout </button>
@@ -36,7 +36,8 @@ const DashBoardPage = () => {
                         </div>
                         <br></br>
                         <div className = "entryPageBottomGuiFlexbox">
-                            <div className = "bottomLeftGuiElement">
+                            <div className = "bottomLeftGuiElement"
+                                 onClick={ () => { navigate( "/tasks" ) } }>
                                 <Tasks></Tasks>
                             </div>
                             <div className = "bottomRightGuiElement">
