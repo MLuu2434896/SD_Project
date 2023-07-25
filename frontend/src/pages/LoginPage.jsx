@@ -10,8 +10,8 @@ const Login_page = () => {
 
     return (
     <div>
-        <div className="grid place-content-center">
-            <h1> This is Login Page </h1>
+        <div className="placeholder">
+            <h1> This is the login page </h1>
             { /* Redirect to /dashboard if the user is authorized, otherwise 
                 show login module */ }
             { !token ? (

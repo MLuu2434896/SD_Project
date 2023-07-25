@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useState, useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage";
+import "../styles/register.css";
 
 
 const Register = () => {
@@ -43,44 +44,44 @@ const Register = () => {
     }
 
     return(
-        <div className="grid place-items-center">
-            <form className="box" onSubmit={handleSubmit}>
-                <h1 className = "title has-text-centered">Registeration Module w/o styling</h1>
-                <div className="field">
-                    <label className="label">Email Address</label>
-                    <div className="control">
-                        <input type="email" placeholder="Enter email" value = {email} onChange ={(e) => setEmail(e.target.value)} className = "input_box" required></input>
-                    </div>
+    <div className="column">
+        <form className="box" onSubmit={handleSubmit}>
+            <h1 className = "biggestText">Registeration Module w/o styling</h1>
+            <div className="input_box">
+                <label className="label">Email Address</label>
+                <div className="control">
+                    <input type="email" placeholder="Enter email" value = {email} onChange ={(e) => setEmail(e.target.value)} className = "input_box" required></input>
                 </div>
+            </div>
 
-                <div className="field">
-                    <label className="label">First Name:</label>
-                    <div className="control">
-                        <input type="text" placeholder="Enter 1st name" value = {firstname} onChange ={(e) => setFirstName(e.target.value)} className = "input_box" required ></input>
-                    </div>
+            <div className="input_box">
+                <label className="label">First Name:</label>
+                <div className="control">
+                    <input type="text" placeholder="Enter 1st name" value = {firstname} onChange ={(e) => setFirstName(e.target.value)} className = "input_box" required ></input>
                 </div>
+            </div>
 
-                <div className="field">
-                    <label className="label">Last Name:</label>
-                    <div className="control">
-                        <input type="text" placeholder="Enter last name" value = {lastname} onChange ={(e) => setLastName(e.target.value)} className = "input_box" required></input>
-                    </div>
+            <div className="input_box">
+                <label className="label">Last Name:</label>
+                <div className="control">
+                    <input type="text" placeholder="Enter last name" value = {lastname} onChange ={(e) => setLastName(e.target.value)} className = "input_box" required></input>
                 </div>
-                <div className="field">
-                    <label className="label">Password:</label>
-                    <div className="control">
-                        <input type="password" placeholder="Enter password" value = {password} onChange ={(e) => setPassword(e.target.value)} className = "input_box" required></input>
-                    </div>
+            </div>
+            <div className="input_box">
+                <label className="label">Password:</label>
+                <div className="control">
+                    <input type="password" placeholder="Enter password" value = {password} onChange ={(e) => setPassword(e.target.value)} className = "input_box" required></input>
                 </div>
+            </div>
 
-                <ErrorMessage message = {errorMessage}></ErrorMessage>
+            <ErrorMessage message = {errorMessage}></ErrorMessage>
 
-                <br></br>
-                <button className="button is primary" type="submit">
+            <br></br>
+            <button className="register_btn" type="submit">
                     Register Button
-                </button>
-            </form>
-        </div>
+            </button>
+        </form>
+    </div>
     )
 };
 

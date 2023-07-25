@@ -1,6 +1,12 @@
+/* The only line that I have changes is padding on .column*/
 .column{
-    width: 100%;
+    position: static;
+    margin: 0px 25% 0px 25%;
+
+    width: 50%;
+    height: 125%;
     background-color: aliceblue;
+    padding: 20px 20px 50px 20px;
 }
 
 .LoginPageContainer {
@@ -66,7 +72,40 @@
     background-color: hsl(0, 84%, 75%);
 }
 
+/* Below this comment is the code that I have made -Chris*/
+
+.biggestText{
+    text-align: center;
+    padding-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.login_btn {
+    border-width: thin;
+    border-color: rgb(173, 173, 173);
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    width: 100%;
+    background-color: red;
+    color: darkgray;
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 0% 0% 0% 0%;
+}
+.login_btn:hover{
+    font-weight: bold;
+    background-color: rgb(184, 190, 194);
+    color: rgb(45, 45, 45);
+    transition: 00.75s;
+}
+
+/* Added border color, radius and width */
+
 .input_box{
     border-width: thin;
-    border-color: black;
+    border-color: rgb(225, 232, 235);
+    border-radius: 5px;
+    width: 100%
 }

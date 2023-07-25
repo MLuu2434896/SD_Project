@@ -68,12 +68,12 @@ const Login = () => {
    return (
     <div className="column">
         <form className="box" onSubmit={handleSubmit}>
-            <h1 className = "title has-text-centered">Login Module w/o styling</h1>
+            <h1 className = "biggestText">Login to Trackage</h1>
             <div className="field">
                 <label className="label">Email Address</label>
                 <div className="control">
                     <input type="email" 
-                           placeholder="Enter email" 
+                           placeholder=" Enter email" 
                            value = {email} 
                            onChange ={(e) => setEmail(e.target.value)} 
                            className = "input_box" 
@@ -86,7 +86,7 @@ const Login = () => {
                 <label className="label">Password:</label>
                 <div className="control">
                     <input type="password" 
-                           placeholder="Enter password" 
+                           placeholder=" Enter password" 
                            value = {password} 
                            onChange ={(e) => setPassword(e.target.value)} 
                            className = "input_box" 
@@ -98,7 +98,7 @@ const Login = () => {
             <ErrorMessage message = {errorMessage}></ErrorMessage>
 
             <br></br>
-            <button className="button is primary" 
+            <button className="login_btn" 
                     type="submit">
                     Login
             </button>
