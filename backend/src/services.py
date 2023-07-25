@@ -393,3 +393,14 @@ async def set_complete_task( task_id: int, db: Session ):
     db.refresh( task_db )
 
     return task_db
+
+async def update_sprint( sprint_id: int, sprint: Schemas.SprintCreate, current_employee: Schemas.Employee, db: Session ):
+    sprint_db = await get_sprint_by_id( sprint_id, current_employee, db )
+
+    sprint_db.sprint_name = sprint.sprint_name
+
+    db.commit()
+    db.refresh( sprint_db )
+
+    return Schemas.Sprint.from_orm( sprint_db ) 
+

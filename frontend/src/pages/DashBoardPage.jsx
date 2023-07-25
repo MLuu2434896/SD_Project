@@ -41,7 +41,7 @@ const DashBoardPage = () => {
                                 <Tasks></Tasks>
                             </div>
                             <div className = "bottomRightGuiElement">
-                                <BurnDownChart></BurnDownChart>
+                                <BurnDownChart isActive></BurnDownChart>
                             </div>
                         </div>  
                     </div>

@@ -177,5 +177,20 @@ async def delete_sprint( sprint_id: int, current_employee=Depends( Services.get_
     await Services.delete_sprint( sprint_id=sprint_id, current_employee=current_employee, db=db )
     return {"message": "Successfully deleted a sprint!" }
 
+@app.put( "/api/update_sprint/{sprint_id}", tags=["sprints"], status_code=200, response_model=Schemas.Sprint )
+async def update_sprint( sprint_id: int, sprint: Schemas.SprintCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    updated_sprint = await Services.update_sprint( sprint_id=sprint_id,
+                                                   sprint=sprint, 
+                                                   current_employee=current_employee, 
+                                                   db=db )
+    return updated_sprint
+
+@app.get( "/api/show_sprint/{sprint_id}", tags=["sprints"], response_model=Schemas.Sprint )
+async def show_sprint_by_id( sprint_id: int, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    sprint_db = await Services.get_sprint_by_id( sprint_id=sprint_id,
+                                                 current_employee=current_employee, 
+                                                 db=db )
+    return sprint_db
+
 if __name__ == '__main__':
-    uvicorn.run( "main:app", host="localhost", port=8000, reload=True )
+    uvicorn.run( "main:app", host="localhost", port=8000, reload=True ) 
