@@ -5,6 +5,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import axios from "axios";
 import moment from "moment";
 import AddSprintModal from "./AddSprintModal";
+import SprintTasksModal from "./SprintTasksModal";
 
 // TODO: Add an error message tag under the table if something went wrong!
 
@@ -21,8 +22,11 @@ const Tasks = () => {
     // Request success confirmation.
     const [ isLoaded, setIsLoaded ] = useState( false );
 
-    // Modal active flag.
-    const [ isActiveModal, setIsActiveModal ] = useState( false );
+    // Sprint Modal active flag.
+    const [ isSprintModalActive, setIsSPrintModalActive ] = useState( false );
+
+    // Task Modal active flag.
+    const [ isTaskModalActive, setIsTaskModalActive ] = useState ( false );
 
     const [ id, setId ] = useState( null );
 
@@ -94,15 +98,31 @@ const Tasks = () => {
         getSprintsCurrentUser();
     };
 
-    const handleModalClose = () => {
-        setIsActiveModal( !isActiveModal );
+    // Set the active flag of the modal to false to close the modal.
+    // Also fetch the sprints of the current user and set the ID to null.
+    const handleSprintModalClose = () => {
+        setIsSPrintModalActive( !isSprintModalActive );
         getSprintsCurrentUser();
         setId( null );
     };
 
+    // Set the active flag of the modal to false to close the modal.
+    // Also fetch the sprints of the current user and set the ID to null.
+    const handleTaskModalClose = () => {
+        setIsTaskModalActive( !isTaskModalActive );
+        getSprintsCurrentUser();
+        setId( null );
+    };
+
+
     const handleUpdateSprint = async ( sprint_id ) => {
         setId( sprint_id );
-        setIsActiveModal( true );
+        setIsSPrintModalActive( true );
+    };
+
+    const handleSprintNameClick = async ( sprint_id ) => {
+        setId( sprint_id );
+        setIsTaskModalActive( true );
     };
 
     // Getting all the sprints of the current user/employee everytime the page loads.
@@ -113,7 +133,7 @@ const Tasks = () => {
     return (
         <div>
             <button className="w-full h-12 px-6 text-white transition-colors duration-150 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    onClick={ () => { setIsActiveModal( true ) } }>
+                    onClick={ () => { setIsSPrintModalActive( true ) } }>
                     Add Sprint
             </button>
 
@@ -143,7 +163,9 @@ const Tasks = () => {
                             { sprints.map( ( sprint ) => (
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     key={ sprint.sprint_id }>
-                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <th scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                        onClick={ () => handleSprintNameClick( sprint.sprint_id ) }>
                                         { sprint.sprint_name }
                                     </th>
                                     <td className="px-6 py-4">
@@ -170,12 +192,18 @@ const Tasks = () => {
                     </table>
                 </div>
 
-                <AddSprintModal isActiveModal={ isActiveModal }
-                                onClose={ handleModalClose }
+                <AddSprintModal isActiveModal={ isSprintModalActive }
+                                onClose={ handleSprintModalClose }
                                 token={ token }
                                 setErrorMessage={ setErrorMessage }
                                 id={ id }>
                 </AddSprintModal>
+                <SprintTasksModal isActive={ isTaskModalActive }
+                                  onClose={ handleTaskModalClose }
+                                  token={ token }
+                                  setErrorMessage={ setErrorMessage }
+                                  id={ id }>
+                </SprintTasksModal>
                 </>
             ) : (
                 <h1> Loading </h1>
