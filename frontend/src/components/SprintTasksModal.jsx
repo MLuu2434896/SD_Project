@@ -115,18 +115,19 @@ const SprintTasksModal = ( { isActive, onClose, token, setErrorMessage, id } ) =
                                     { /* Card Div */}
                                     { tasks.map( ( task ) => (
                                         <div className="inline-block px-3"
-                                             id={task.task_id}>
+                                             key={task.task_id}>
                                             <div className="w-64 h-64 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
                                                 { /* Card Label */}
                                                 <h1 className="mb-2 text-xl font-mono tracking-tight text-center text-gray-900">
                                                     {task.task_name}
                                                 </h1>
                                                 { /* Card Description */}
-                                                <p className="mb-2 font-normal p-3 text-gray-700 dark:text-gray-400">
+                                                <p className="font-normal p-3 max-h-36 overflow-y-scroll hide-scroll-bar text-gray-700 dark:text-gray-400">
                                                     {task.task_info}
+                                                    {/* I don't know if I can finish this in time, hopefully will finish hopefully will finish it before Fridayhopefully will finish it before Fridayhopefully will finish it before Fridayit before Friday. I don't know if I can finish this in time, hopefully will finish it before Friday.hopefully will finish it before Fridayhopefully will finish it before Fridayhopefully will finish it before Friday hopefully will finish it before Friday */}
                                                 </p>
                                                 { /* Button Group */ }
-                                                <div className="absolute px-7">
+                                                <div className="sticky top-[100vh] align-top text-center mb-3">
                                                     <button type="button"
                                                             className="py-1 px-3 inline-flex justify-center items-center gap-2 -ml-px first:rounded-l-lg first:ml-0 last:rounded-r-lg border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
                                                             Complete
