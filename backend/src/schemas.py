@@ -62,7 +62,7 @@ class _TaskBase( Pydantic.BaseModel ):
 class TaskCreate( _TaskBase ):
     pass
 
-class Task( _TaskBase ):
+class Task( _TaskBase ): 
     task_id: int = Field( ge=0 )
     is_complete: int = Field( gt=-1, lt=2 )
 

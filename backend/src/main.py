@@ -152,9 +152,23 @@ async def show_all_tasks_current_user( current_employee=Depends( Services.get_cu
 
     return tasks_db
 
-@app.post( "/api/complete_task/{task_id}", tags=["tasks"], response_model=Schemas.Task )
+@app.put( "/api/complete_task/{task_id}", tags=["tasks"], response_model=Schemas.Task, status_code=200 )
 async def set_complete_task( task_id: int, db=Depends( Services.get_db ) ):
-    updated_task = await Services.set_complete_task( task_id=task_id, db=db )
+    updated_task = await Services.complete_task( task_id=task_id, db=db )
+    return updated_task
+
+@app.get( "/api/show_task/{task_id}", tags=["tasks"], response_model=Schemas.Task )
+async def show_task_by_id( task_id: int, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db) ):
+    task_db = await Services.get_task_by_id( task_id=task_id,
+                                             db=db )
+    return Schemas.Task.from_orm( task_db )
+
+@app.put( "/api/update_task/{task_id}", tags=["tasks"], response_model=Schemas.Task )
+async def update_task( task_id: int, task: Schemas.TaskCreate, current_employee=Depends( Services.get_current_user ), db=Depends( Services.get_db ) ):
+    updated_task = await Services.update_task( task_id=task_id,
+                                         task=task,
+                                         current_employee=current_employee,
+                                         db=db )
     return updated_task
 
 ########## SPRINTS ##########

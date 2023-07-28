@@ -286,7 +286,7 @@ async def create_task( sprint_id: int, task: Schemas.TaskCreate, current_employe
 
     return Schemas.Task.from_orm( task_obj )
 
-async def get_sprint_by_id( sprint_id: int, current_employee: Schemas.Employee, db: Session ):
+async def get_sprint_by_id( sprint_id: int, current_employee: Schemas.Employee, db: Session ) -> Schemas.Sprint | None:
     sprint_db = db.query( models.Sprint ) \
                     .filter(
                             models.Sprint.employee_id == current_employee.id,
@@ -335,7 +335,7 @@ async def delete_task( task_id: int, db: Session ):
     db.delete( task_db )
     db.commit()
 
-async def get_task_by_id( task_id: int, db: Session ):
+async def get_task_by_id( task_id: int, db: Session ) -> Schemas.Task | None:
     task_db = db.query( models.Task ) \
                 .filter( models.Task.task_id == task_id ) \
                 .first()
@@ -384,7 +384,7 @@ async def get_all_tasks( current_employee: Schemas.Employee, db: Session ):
 
     return list( map( Schemas.Task.from_orm, all_tasks_db ) )
 
-async def set_complete_task( task_id: int, db: Session ):
+async def complete_task( task_id: int, db: Session ):
     task_db = await get_task_by_id( task_id=task_id, db=db )
 
     task_db.is_complete = 1
@@ -392,7 +392,7 @@ async def set_complete_task( task_id: int, db: Session ):
     db.commit()
     db.refresh( task_db )
 
-    return task_db
+    return Schemas.Task.from_orm( task_db )
 
 async def update_sprint( sprint_id: int, sprint: Schemas.SprintCreate, current_employee: Schemas.Employee, db: Session ):
     sprint_db = await get_sprint_by_id( sprint_id, current_employee, db )
@@ -404,3 +404,13 @@ async def update_sprint( sprint_id: int, sprint: Schemas.SprintCreate, current_e
 
     return Schemas.Sprint.from_orm( sprint_db ) 
 
+async def update_task( task_id: int, task: Schemas.TaskCreate, current_employee: Schemas.Employee, db: Session ):
+    task_db = await get_task_by_id( task_id, db )
+
+    task_db.task_name = task.task_name
+    task_db.task_info = task.task_info
+
+    db.commit()
+    db.refresh( task_db )
+    
+    return Schemas.Task.from_orm( task_db )

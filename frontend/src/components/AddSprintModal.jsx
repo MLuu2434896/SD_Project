@@ -5,6 +5,8 @@ import axios from "axios";
 const AddSprintModal = ( { isActiveModal, onClose, token, setErrorMessage, id } ) => {
     const [ sprintName, setSprintName ] = useState( "" );
 
+    // Whenever this modal opens, get the current sprint and set the form's suggestion
+    // to the current sprint's name.
     const getSprintByID = ( sprint_id ) => {
         const config = { 
             headers: {
@@ -17,7 +19,7 @@ const AddSprintModal = ( { isActiveModal, onClose, token, setErrorMessage, id } 
                 // If successfully requested a get request, it'd set sprint name
                 // in useState to show it in the form ( referenced by value={} ).
                 setSprintName( response.data.sprint_name )
-                console.log( "Clicked on edit button of " + JSON.stringify( response.data.sprint_name ) )
+                console.log( `Successfully fetched a sprint with the sprint_id: ${sprint_id}` );
             } )
             .catch( ( error ) => {
                 // Received a response from server but not the right format.
