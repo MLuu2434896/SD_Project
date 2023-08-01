@@ -11,13 +11,13 @@ const Login_page = () => {
     return (
     <div>
         <div className="placeholder">
-            <h1> This is the login page </h1>
+            <h1> This is the login page wowww</h1>
             { /* Redirect to /dashboard if the user is authorized, otherwise 
                 show login module */ }
             { !token ? (
                 <Login></Login>
             ) : (
-                <Navigate to="/dashboard"></Navigate>
+                <Navigate to="/"></Navigate>
             ) }
         </div>
         

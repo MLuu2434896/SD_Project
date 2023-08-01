@@ -4,7 +4,7 @@ import axios from "axios";
 
 const AddSprintModal = ( { isActiveModal, onClose, token, setErrorMessage, id } ) => {
     const [ sprintName, setSprintName ] = useState( "" );
-
+    console.log("This is TRUE ID", id);
     // Whenever this modal opens, get the current sprint and set the form's suggestion
     // to the current sprint's name.
     const getSprintByID = ( sprint_id ) => {

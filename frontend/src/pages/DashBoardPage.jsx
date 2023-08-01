@@ -5,6 +5,9 @@ import Tasks from "../components/Tasks";
 import BurnDownChart from "../components/BurnDownChart";
 import "../styles/components.css";
 import { Navigate, useNavigate } from "react-router-dom";
+//import Taskbar from "../components/Taskbar";
+import BurnDown from "../components/BurnDown";
+import Tasks_noedit from "../components/Tasks_noedit";
 
 
 const DashBoardPage = () => {
@@ -17,39 +20,25 @@ const DashBoardPage = () => {
     };
 
    return(
-        <div>
+        <div >
+            {/* <Taskbar /> */}
             <br></br>
-            <h1 className="text-center"> This is the dashboard page </h1>
-            <div className="grid place-content-end mr-16">
-                <button onClick={ handleLogout }>
-                        Logout </button>
-            </div>
             {
                 !token ? (
                     <Navigate to="/login"></Navigate>
                 ) : (
-                    <div>
-                        <div className = "entryPageTopGuiFlexbox">
-                            <div className = "topRightGuiElement">
-                                <SprintProgress></SprintProgress>
-                            </div>
+                    <div className="relative min-h-screen">
+                        <div className = "">
+                            <Tasks_noedit></Tasks_noedit>
                         </div>
-                        <br></br>
-                        <div className = "entryPageBottomGuiFlexbox">
-                            <div className = "bottomLeftGuiElement"
-                                 onClick={ () => { navigate( "/tasks" ) } }>
-                                <Tasks></Tasks>
-                            </div>
-                            <div className = "bottomRightGuiElement">
-                                <BurnDownChart isActive></BurnDownChart>
-                            </div>
-                        </div>  
                     </div>
                 )
                 
             }
             
         </div>
+
+        
     )
 }
 

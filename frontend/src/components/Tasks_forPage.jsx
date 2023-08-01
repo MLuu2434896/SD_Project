@@ -1,18 +1,26 @@
 import React, { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useState, useEffect } from "react";
-import ErrorMessage from "../components/ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 import moment from "moment";
 import AddSprintModal from "./AddSprintModal";
 import SprintTasksModal from "./SprintTasksModal";
 import TasksTable from "./TasksTable";
 import SprintProgress from "./SprintProgress";
+import TasksTable_forPage from "./TasksTable_forPage";
+import BurnDown from "./BurnDown";
+import TasksTable_forPageTwo from "./TasksTable_forPageTwo";
+import { Fragment } from 'react'
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { NavLink } from 'react-router-dom'
+import { Navigate, useNavigate } from "react-router-dom";
 //import Taskbar from "../components/Taskbar";
 
 // TODO: Add an error message tag under the table if something went wrong!
 
-const Tasks = () => {
+const Tasks_forPage = () => {
     var new_date;
     var superID;
     // Getting access token of current user.
@@ -33,9 +41,15 @@ const Tasks = () => {
     // Task Modal active flag.
     const [ isTaskModalActive, setIsTaskModalActive ] = useState ( false );
 
-    const [ id, setId ] = useState( null );
+    const [ id, setId ] = useState( 8 );
 
     const [ inputID, setInput] = useState(null);
+
+    const [selectedOption, setSelectedOption] = useState(0);
+      
+    const handleSelectChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
 
     // Setting up headers and request.
     const getSprintsCurrentUser = async () => {
@@ -145,91 +159,40 @@ const Tasks = () => {
                     onClick={ () => { setIsSPrintModalActive( true ) } }>
                     Add Sprint
             </button> */}
-
             { /* Only load the table if successfully fetched from backend. */}
             { isLoaded && sprints ? (
                 <>
-                <button className="relative rounded-sm dark:hover:bg-gray-600 -right-52 -top-8"
-                    onClickCapture={ () => { setId( null ) } }
-                    onClick={ () => { setIsSPrintModalActive( true ) } }>
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        strokeWidth={1.7} 
-                        stroke="currentColor" 
-                        className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </button>
-                <div className=" relative scrollbar-hide md:scrollbar-default grid grid-cols-6 gap-2 grid-rows-2 grid-flow-col pl-10 pr-10">
-                    <div className="relative overflow-x-auto shadow-md sm:rounded-lg col-start-2 col-span-4 right-24 -top-12 row-start-1 row-span-1"> 
-                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400"> 
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-200">
-                                <tr>
-                                    <th scope="col" className="px-6 py-3">
-                                        Sprint name
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Sprint ID
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Start Date
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        <span className="sr-only"> Action </span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { /* Renders all sprints of the current user fetched from URL */}
-                                { sprints.map( ( sprint ) => (
-                                    <tr className={"text-black" + (id == sprint.sprint_id ? "bg-white border-b dark:bg-gray-700 dark:border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-700 text-white cursor-pointer" : "bg-white border-b dark:bg-gray-600 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 text-white  cursor-pointer")}
-                                    onClickCapture={()=> setId(sprint.sprint_id)}
-                                    key={ sprint.sprint_id }>
-                                        <th scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                            //onClick={ () => handleSprintNameClick( sprint.sprint_id ) }
-                                            >
-                                            { sprint.sprint_name }
-                                        </th>
-                                        <td className="px-6 py-4">
-                                            { sprint.sprint_id }
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            { moment( sprint.start_date ).format( "MMM Do YYYY" ) }
-                                        </td> 
-                                        <td className="px-6 py-4 text-right">
-                                            <button type="button" 
-                                                    className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                                                    onClick={ () => handleUpdateSprint( sprint.sprint_id ) }>
-                                                Edit
-                                            </button>
-                                            <button type="button"
-                                                    className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                                                    onClick={ () => handleDeleteSprint( sprint.sprint_id ) }>
-                                                Delete
-                                            </button>
-                                        </td>         
-                                                        
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                <div className=" pt-20 relative scrollbar-hide md:scrollbar-default Dashboard min-h-screen grid grid-cols-4 grid-rows-4 gap-2 grid-flow-col pl-20 pr-10 left-40">                   
+
+                    <div className="absolute top-0 left-52">
+                        <select id="dropdown" value={selectedOption} onChange={handleSelectChange} onClickCapture={()=> setId(selectedOption)} >
+                            {sprints.map((sprint) => (
+                            <option key={sprint.sprint_id} value={sprint.sprint_id}>
+                                {sprint.sprint_name}
+                            </option>
+                            ))}
+                        </select>
+                        {/* {setId(selectedOption)} */}
+                        {/* <p>You selected: {selectedOption}</p> */}
                     </div>
 
-                    <div className="relative col-start-2 col-span-4 right-32 row-start-2 row-span-1">
-                        <TasksTable token={ token }
+
+                    <div className=" col-start-1 col-span-4 row-start-1 row-span-3 relative -right-40 pb-10 top-10">
+                    {/* <h1 className="pt-10 pb-10 pl-10">Current Tasks</h1> */}
+                        <TasksTable_forPage token={ token }
                                     id={ id }>
-                        </TasksTable>
+                        </TasksTable_forPage>
                     </div>
 
-                    {/* <div className="absolute right-1/4 top-30">
-                        <h1 className="pb-10">Sprint Progress</h1>
-                        <SprintProgress token={ token }
+                    {/* <div className="relative col-start-3 col-span-2 row-start-1 row-span-1 pl-10 -right-32 pb-10 top-10">
+                        <TasksTable_forPageTwo token={ token }
                                     id={ id }>
-                        </SprintProgress>
-                    </div> */}
+                        </TasksTable_forPageTwo>
+                    </div>   */}
 
+                    {/* <div className="relative col-start-1 col-span-3 row-start-2 row-span-1 -right-28 -top-28">
+                        <BurnDown></BurnDown>
+                    </div>                */}
                     <AddSprintModal isActiveModal={ isSprintModalActive }
                                     onClose={ handleSprintModalClose }
                                     token={ token }
@@ -251,4 +214,4 @@ const Tasks = () => {
     )
 };
 
-export default Tasks;
+export default Tasks_forPage;
