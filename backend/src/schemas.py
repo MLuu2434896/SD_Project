@@ -49,6 +49,7 @@ class SprintCreate( _SprintBase ):
 class Sprint( _SprintBase ):
     sprint_id: int = Field( ge=0 )
     start_date: datetime
+    # end_date: datetime
     employee_id: int = Field( ge=0 )
 
     class Config:

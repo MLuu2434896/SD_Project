@@ -36,6 +36,7 @@ class Sprint( DB.Base ):
     sprint_id = SQL.Column( SQL.Integer, primary_key=True, index=True )
     sprint_name = SQL.Column( SQL.String )
     start_date = SQL.Column( SQL.DateTime, default=datetime.now() )
+    #end_date = SQL.Column( SQL.DateTime, default=datetime.now() )
 
     employee_id = SQL.Column( SQL.Integer, SQL.ForeignKey( "employees.id" ) )
 
