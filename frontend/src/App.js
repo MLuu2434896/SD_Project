@@ -26,6 +26,7 @@ function App() {
       <Taskbar /> 
         <Routes>
           <Route exact path="/" element={<Home/>}></Route>
+          <Route exact path="/dashboard" element={<DashBoardPage/>}></Route>
           <Route exact path="/login" element={<LoginPage/>}></Route>
           <Route exact path="/loginModule" element={<Login/>}></Route>
           <Route exact path="/customize" element={<Customize/>}></Route>

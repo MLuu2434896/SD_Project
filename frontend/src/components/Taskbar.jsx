@@ -7,7 +7,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../components/UserContext";
 
 const navigation = [
-  { name: 'Dashboard', href: '/' },
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'Tasks', href: '/tasks' },
   { name: 'Customize', href: '/customize' },
 ]
