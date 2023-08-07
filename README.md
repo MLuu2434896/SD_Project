@@ -1,6 +1,6 @@
 To view the BE documentation:
-- install all newly added packages in the BE.
 - Activate the venv.
+- install all newly added packages in the BE.
 - Navigate to backend/src/docs
 - Execute the .bat file.
 ```bash
