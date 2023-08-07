@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main module &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="models module" href="models.html" />
+    <link rel="prev" title="database module" href="database.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="constants.html">constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.create_sprint"><code class="docutils literal notranslate"><span class="pre">create_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.create_supervisor"><code class="docutils literal notranslate"><span class="pre">create_supervisor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.create_task"><code class="docutils literal notranslate"><span class="pre">create_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.delete_sprint"><code class="docutils literal notranslate"><span class="pre">delete_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.delete_supervisor"><code class="docutils literal notranslate"><span class="pre">delete_supervisor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.delete_task"><code class="docutils literal notranslate"><span class="pre">delete_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.delete_user"><code class="docutils literal notranslate"><span class="pre">delete_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.generate_token"><code class="docutils literal notranslate"><span class="pre">generate_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.get_tasks_by_sprint_id"><code class="docutils literal notranslate"><span class="pre">get_tasks_by_sprint_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.read_item"><code class="docutils literal notranslate"><span class="pre">read_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.read_root"><code class="docutils literal notranslate"><span class="pre">read_root()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.set_complete_task"><code class="docutils literal notranslate"><span class="pre">set_complete_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_all_tasks_current_user"><code class="docutils literal notranslate"><span class="pre">show_all_tasks_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_current_user"><code class="docutils literal notranslate"><span class="pre">show_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_sprint_by_id"><code class="docutils literal notranslate"><span class="pre">show_sprint_by_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_sprints_current_user"><code class="docutils literal notranslate"><span class="pre">show_sprints_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_supervisors"><code class="docutils literal notranslate"><span class="pre">show_supervisors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_task_by_id"><code class="docutils literal notranslate"><span class="pre">show_task_by_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.show_users"><code class="docutils literal notranslate"><span class="pre">show_users()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.update_sprint"><code class="docutils literal notranslate"><span class="pre">update_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.update_task"><code class="docutils literal notranslate"><span class="pre">update_task()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schemas.html">schemas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">services module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">test module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">main module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="main.create_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">create_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SprintCreate" title="schemas.SprintCreate"><span class="pre">SprintCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#create_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.create_sprint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.create_supervisor">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">create_supervisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supervisor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SupervisorCreate" title="schemas.SupervisorCreate"><span class="pre">SupervisorCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#create_supervisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.create_supervisor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.create_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.TaskCreate" title="schemas.TaskCreate"><span class="pre">TaskCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.create_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.create_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.EmployeeCreate" title="schemas.EmployeeCreate"><span class="pre">EmployeeCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.create_user" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new user with the given email, if the email exists w/in the database
+, then raise a 404 HTTP error
+If the given email is not in a correct type, a 422 error code is raised</p>
+<p>&#64;PARA:
+user: represents the info inputted by the user when creating a new account on</p>
+<blockquote>
+<div><p>frontend</p>
+</div></blockquote>
+<p>db: a database session</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.delete_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">delete_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#delete_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.delete_sprint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.delete_supervisor">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">delete_supervisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supervisor_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#delete_supervisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.delete_supervisor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.delete_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">delete_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#delete_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.delete_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.delete_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">delete_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.delete_user" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_token">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OAuth2PasswordRequestForm</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(OAuth2PasswordRequestForm)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_token" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.get_tasks_by_sprint_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">get_tasks_by_sprint_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#get_tasks_by_sprint_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.get_tasks_by_sprint_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.read_item">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">read_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#read_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.read_item" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.read_root">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">read_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/main.html#read_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.read_root" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.set_complete_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">set_complete_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#set_complete_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.set_complete_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_all_tasks_current_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_all_tasks_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_all_tasks_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_all_tasks_current_user" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_current_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_current_user" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_sprint_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_sprint_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_sprint_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_sprint_by_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_sprints_current_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_sprints_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_sprints_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_sprints_current_user" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_supervisors">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_supervisors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_supervisors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_supervisors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_task_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_task_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_task_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_task_by_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.show_users">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">show_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#show_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.show_users" title="Permalink to this definition"></a></dt>
+<dd><p>Show all the users w/in the database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.update_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">update_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sprint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SprintCreate" title="schemas.SprintCreate"><span class="pre">SprintCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#update_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.update_sprint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.update_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">update_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.TaskCreate" title="schemas.TaskCreate"><span class="pre">TaskCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#update_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.update_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="database.html" class="btn btn-neutral float-left" title="database module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="models module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

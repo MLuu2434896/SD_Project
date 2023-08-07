@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>schemas &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">schemas</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for schemas</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This file generates response templates for different requests made by the frontend</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">pydantic</span> <span class="k">as</span> <span class="nn">Pydantic</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+
+<span class="k">class</span> <span class="nc">_EmployeeBase</span><span class="p">(</span> <span class="n">Pydantic</span><span class="o">.</span><span class="n">BaseModel</span> <span class="p">):</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span> <span class="p">)</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span> <span class="p">)</span> 
+    
+<div class="viewcode-block" id="EmployeeCreate"><a class="viewcode-back" href="../schemas.html#schemas.EmployeeCreate">[docs]</a><span class="k">class</span> <span class="nc">EmployeeCreate</span><span class="p">(</span> <span class="n">_EmployeeBase</span> <span class="p">):</span>
+    <span class="n">hashed_password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="EmployeeCreate.Config"><a class="viewcode-back" href="../schemas.html#schemas.EmployeeCreate.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">orm_mode</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<div class="viewcode-block" id="Employee"><a class="viewcode-back" href="../schemas.html#schemas.Employee">[docs]</a><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span> <span class="n">_EmployeeBase</span> <span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+    <span class="n">role</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="Employee.Config"><a class="viewcode-back" href="../schemas.html#schemas.Employee.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">orm_mode</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<span class="k">class</span> <span class="nc">_SupervisorBase</span><span class="p">(</span> <span class="n">Pydantic</span><span class="o">.</span><span class="n">BaseModel</span> <span class="p">):</span>
+    <span class="n">employee_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="SupervisorCreate"><a class="viewcode-back" href="../schemas.html#schemas.SupervisorCreate">[docs]</a><span class="k">class</span> <span class="nc">SupervisorCreate</span><span class="p">(</span> <span class="n">_SupervisorBase</span> <span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Supervisor"><a class="viewcode-back" href="../schemas.html#schemas.Supervisor">[docs]</a><span class="k">class</span> <span class="nc">Supervisor</span><span class="p">(</span> <span class="n">_SupervisorBase</span> <span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+    <span class="n">date_created</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span> <span class="p">)</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">128</span> <span class="p">)</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+
+<div class="viewcode-block" id="Supervisor.Config"><a class="viewcode-back" href="../schemas.html#schemas.Supervisor.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">orm_mode</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<span class="k">class</span> <span class="nc">_SprintBase</span><span class="p">(</span> <span class="n">Pydantic</span><span class="o">.</span><span class="n">BaseModel</span> <span class="p">):</span>
+    <span class="n">sprint_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="SprintCreate"><a class="viewcode-back" href="../schemas.html#schemas.SprintCreate">[docs]</a><span class="k">class</span> <span class="nc">SprintCreate</span><span class="p">(</span> <span class="n">_SprintBase</span> <span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Sprint"><a class="viewcode-back" href="../schemas.html#schemas.Sprint">[docs]</a><span class="k">class</span> <span class="nc">Sprint</span><span class="p">(</span> <span class="n">_SprintBase</span> <span class="p">):</span>
+    <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+    <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="c1"># end_date: datetime</span>
+    <span class="n">employee_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="Sprint.Config"><a class="viewcode-back" href="../schemas.html#schemas.Sprint.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">orm_mode</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+<span class="k">class</span> <span class="nc">_TaskBase</span><span class="p">(</span> <span class="n">Pydantic</span><span class="o">.</span><span class="n">BaseModel</span> <span class="p">):</span>
+    <span class="n">task_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span> <span class="p">)</span>
+    <span class="n">task_info</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">1028</span> <span class="p">)</span>
+    <span class="c1"># sprint_id: int = Field( ge=0 )</span>
+
+<div class="viewcode-block" id="TaskCreate"><a class="viewcode-back" href="../schemas.html#schemas.TaskCreate">[docs]</a><span class="k">class</span> <span class="nc">TaskCreate</span><span class="p">(</span> <span class="n">_TaskBase</span> <span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Task"><a class="viewcode-back" href="../schemas.html#schemas.Task">[docs]</a><span class="k">class</span> <span class="nc">Task</span><span class="p">(</span> <span class="n">_TaskBase</span> <span class="p">):</span> 
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+    <span class="n">is_complete</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span> <span class="n">gt</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">lt</span><span class="o">=</span><span class="mi">2</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="Task.Config"><a class="viewcode-back" href="../schemas.html#schemas.Task.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">orm_mode</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

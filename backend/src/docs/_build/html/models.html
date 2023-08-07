@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>models module &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="schemas module" href="schemas.html" />
+    <link rel="prev" title="main module" href="main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="constants.html">constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">models module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#models.Employee"><code class="docutils literal notranslate"><span class="pre">Employee</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.email"><code class="docutils literal notranslate"><span class="pre">Employee.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.first_name"><code class="docutils literal notranslate"><span class="pre">Employee.first_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.hashed_password"><code class="docutils literal notranslate"><span class="pre">Employee.hashed_password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.id"><code class="docutils literal notranslate"><span class="pre">Employee.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.is_active"><code class="docutils literal notranslate"><span class="pre">Employee.is_active</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.last_name"><code class="docutils literal notranslate"><span class="pre">Employee.last_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.role"><code class="docutils literal notranslate"><span class="pre">Employee.role</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Employee.supervisor"><code class="docutils literal notranslate"><span class="pre">Employee.supervisor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#models.Sprint"><code class="docutils literal notranslate"><span class="pre">Sprint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.Sprint.employee_id"><code class="docutils literal notranslate"><span class="pre">Sprint.employee_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Sprint.sprint_id"><code class="docutils literal notranslate"><span class="pre">Sprint.sprint_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Sprint.sprint_name"><code class="docutils literal notranslate"><span class="pre">Sprint.sprint_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Sprint.start_date"><code class="docutils literal notranslate"><span class="pre">Sprint.start_date</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#models.Supervisor"><code class="docutils literal notranslate"><span class="pre">Supervisor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.date_created"><code class="docutils literal notranslate"><span class="pre">Supervisor.date_created</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.email"><code class="docutils literal notranslate"><span class="pre">Supervisor.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.employee_id"><code class="docutils literal notranslate"><span class="pre">Supervisor.employee_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.employees"><code class="docutils literal notranslate"><span class="pre">Supervisor.employees</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.first_name"><code class="docutils literal notranslate"><span class="pre">Supervisor.first_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.id"><code class="docutils literal notranslate"><span class="pre">Supervisor.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Supervisor.last_name"><code class="docutils literal notranslate"><span class="pre">Supervisor.last_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#models.Task"><code class="docutils literal notranslate"><span class="pre">Task</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models.Task.is_complete"><code class="docutils literal notranslate"><span class="pre">Task.is_complete</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Task.sprint_id"><code class="docutils literal notranslate"><span class="pre">Task.sprint_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Task.task_id"><code class="docutils literal notranslate"><span class="pre">Task.task_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Task.task_info"><code class="docutils literal notranslate"><span class="pre">Task.task_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models.Task.task_name"><code class="docutils literal notranslate"><span class="pre">Task.task_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="schemas.html">schemas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">services module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">test module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">models module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-models">
+<span id="models-module"></span><h1>models module<a class="headerlink" href="#module-models" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Employee">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Employee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models.html#Employee"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Employee" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#models.Employee.email" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.first_name">
+<span class="sig-name descname"><span class="pre">first_name</span></span><a class="headerlink" href="#models.Employee.first_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.hashed_password">
+<span class="sig-name descname"><span class="pre">hashed_password</span></span><a class="headerlink" href="#models.Employee.hashed_password" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#models.Employee.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.is_active">
+<span class="sig-name descname"><span class="pre">is_active</span></span><a class="headerlink" href="#models.Employee.is_active" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.last_name">
+<span class="sig-name descname"><span class="pre">last_name</span></span><a class="headerlink" href="#models.Employee.last_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.role">
+<span class="sig-name descname"><span class="pre">role</span></span><a class="headerlink" href="#models.Employee.role" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Employee.supervisor">
+<span class="sig-name descname"><span class="pre">supervisor</span></span><a class="headerlink" href="#models.Employee.supervisor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Sprint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models.html#Sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Sprint" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Sprint.employee_id">
+<span class="sig-name descname"><span class="pre">employee_id</span></span><a class="headerlink" href="#models.Sprint.employee_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Sprint.sprint_id">
+<span class="sig-name descname"><span class="pre">sprint_id</span></span><a class="headerlink" href="#models.Sprint.sprint_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Sprint.sprint_name">
+<span class="sig-name descname"><span class="pre">sprint_name</span></span><a class="headerlink" href="#models.Sprint.sprint_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Sprint.start_date">
+<span class="sig-name descname"><span class="pre">start_date</span></span><a class="headerlink" href="#models.Sprint.start_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Supervisor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Supervisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models.html#Supervisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Supervisor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.date_created">
+<span class="sig-name descname"><span class="pre">date_created</span></span><a class="headerlink" href="#models.Supervisor.date_created" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#models.Supervisor.email" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.employee_id">
+<span class="sig-name descname"><span class="pre">employee_id</span></span><a class="headerlink" href="#models.Supervisor.employee_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.employees">
+<span class="sig-name descname"><span class="pre">employees</span></span><a class="headerlink" href="#models.Supervisor.employees" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.first_name">
+<span class="sig-name descname"><span class="pre">first_name</span></span><a class="headerlink" href="#models.Supervisor.first_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#models.Supervisor.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Supervisor.last_name">
+<span class="sig-name descname"><span class="pre">last_name</span></span><a class="headerlink" href="#models.Supervisor.last_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Task">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.is_complete">
+<span class="sig-name descname"><span class="pre">is_complete</span></span><a class="headerlink" href="#models.Task.is_complete" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.sprint_id">
+<span class="sig-name descname"><span class="pre">sprint_id</span></span><a class="headerlink" href="#models.Task.sprint_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.task_id">
+<span class="sig-name descname"><span class="pre">task_id</span></span><a class="headerlink" href="#models.Task.task_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.task_info">
+<span class="sig-name descname"><span class="pre">task_info</span></span><a class="headerlink" href="#models.Task.task_info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.task_name">
+<span class="sig-name descname"><span class="pre">task_name</span></span><a class="headerlink" href="#models.Task.task_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="schemas.html" class="btn btn-neutral float-right" title="schemas module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

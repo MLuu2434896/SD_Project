@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>services module &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="test module" href="test.html" />
+    <link rel="prev" title="schemas module" href="schemas.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="constants.html">constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schemas.html">schemas module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">services module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#services.authenticate_user"><code class="docutils literal notranslate"><span class="pre">authenticate_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.complete_task"><code class="docutils literal notranslate"><span class="pre">complete_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_db"><code class="docutils literal notranslate"><span class="pre">create_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_sprint"><code class="docutils literal notranslate"><span class="pre">create_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_supervisor"><code class="docutils literal notranslate"><span class="pre">create_supervisor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_task"><code class="docutils literal notranslate"><span class="pre">create_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_token"><code class="docutils literal notranslate"><span class="pre">create_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.delete_employee"><code class="docutils literal notranslate"><span class="pre">delete_employee()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.delete_sprint"><code class="docutils literal notranslate"><span class="pre">delete_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.delete_supervisor"><code class="docutils literal notranslate"><span class="pre">delete_supervisor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.delete_task"><code class="docutils literal notranslate"><span class="pre">delete_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_all_supervisors"><code class="docutils literal notranslate"><span class="pre">get_all_supervisors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_all_tasks"><code class="docutils literal notranslate"><span class="pre">get_all_tasks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_all_users"><code class="docutils literal notranslate"><span class="pre">get_all_users()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_current_user"><code class="docutils literal notranslate"><span class="pre">get_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_db"><code class="docutils literal notranslate"><span class="pre">get_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_sprint_by_id"><code class="docutils literal notranslate"><span class="pre">get_sprint_by_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_sprint_tasks"><code class="docutils literal notranslate"><span class="pre">get_sprint_tasks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_supervisors"><code class="docutils literal notranslate"><span class="pre">get_supervisors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_task_by_id"><code class="docutils literal notranslate"><span class="pre">get_task_by_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_user_by_email"><code class="docutils literal notranslate"><span class="pre">get_user_by_email()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.get_user_by_id"><code class="docutils literal notranslate"><span class="pre">get_user_by_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.hash_password"><code class="docutils literal notranslate"><span class="pre">hash_password()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.show_sprints_current_user"><code class="docutils literal notranslate"><span class="pre">show_sprints_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.update_sprint"><code class="docutils literal notranslate"><span class="pre">update_sprint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.update_task"><code class="docutils literal notranslate"><span class="pre">update_task()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services.verify_password"><code class="docutils literal notranslate"><span class="pre">verify_password()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">test module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">services module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/services.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-services">
+<span id="services-module"></span><h1>services module<a class="headerlink" href="#module-services" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="services.authenticate_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">authenticate_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#authenticate_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.authenticate_user" title="Permalink to this definition"></a></dt>
+<dd><p>Verify if a user exists within the DB and if their password matches with what’s stored 
+in the DB.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>email: str</dt><dd><p>An email in plain text sent by the front-end.</p>
+</dd>
+<dt>password: str</dt><dd><p>A password in plain text sent by the front-end.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>user: Schemas.Employee | False</dt><dd><p>Returns an employee object if found in the DB, otherwise returns false.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.complete_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">complete_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#complete_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.complete_task" title="Permalink to this definition"></a></dt>
+<dd><p>Change the complete status of a task to 1 if found in the DB, 
+OW, raise a 404 HTTP exception.</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_id: int</dt><dd><p>A task’s id.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task: Schemas.Task</dt><dd><p>A task object found in the DB.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_db">
+<span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_db" title="Permalink to this definition"></a></dt>
+<dd><p>Create a .db file using the structures defined in models.py.</p>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Must delete the old .db file to avoid structure conflicts.</p>
+</div></blockquote>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<p>To use this function, navigate to the folder that contains services.py, and do the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python  # To enter python terminal.
+&gt;&gt;&gt; import services
+&gt;&gt;&gt; services.create_db() # This will create a .db file.
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SprintCreate" title="schemas.SprintCreate"><span class="pre">SprintCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_sprint" title="Permalink to this definition"></a></dt>
+<dd><p>Create a sprint obj and insert it into the DB using the data sent by the front-end.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint: Schemas.SprintCreate</dt><dd><p>An object representing the data sent by the front-end whenever a user creates a sprint.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_obj: Schemas.Sprint</dt><dd><p>A successfully created sprint object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_supervisor">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_supervisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supervisor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SupervisorCreate" title="schemas.SupervisorCreate"><span class="pre">SupervisorCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_supervisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_supervisor" title="Permalink to this definition"></a></dt>
+<dd><p>Create a supervisor whose id, LN, FN are taken from employee table since 
+a supervisor is one of the employees.</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>supervisor<span class="classifier">schemas.SupervisorCreate</span></dt><dd><p>A template that represents user’s inputs and is used to create a supervisor.</p>
+</dd>
+<dt>employee<span class="classifier">schemas.Employee</span></dt><dd><p>An employee object that’s retrieved from the database.</p>
+</dd>
+<dt>db<span class="classifier">Session</span></dt><dd><p>A database session.</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h2>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>Supervisor<span class="classifier">schemas.Supervisor</span></dt><dd><p>The newly created supervisor.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.TaskCreate" title="schemas.TaskCreate"><span class="pre">TaskCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_task" title="Permalink to this definition"></a></dt>
+<dd><p>Create a task with the given sprint_id.</p>
+<section id="id7">
+<h2>Notes<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Must be an authorized user to use this function on FASTAPI Docs.</p>
+</div></blockquote>
+</section>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_id: int</dt><dd><p>A sprint’s id.</p>
+</dd>
+<dt>task: Schemas.TaskCreate</dt><dd><p>Data sent by the front-end whenever a user creates a task.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee who’s signed in.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h2>Returns<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_obj: Schemas.Task</dt><dd><p>A successfully created task.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_token">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Employee" title="models.Employee"><span class="pre">Employee</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_token" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.create_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.EmployeeCreate" title="schemas.EmployeeCreate"><span class="pre">EmployeeCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.create_user" title="Permalink to this definition"></a></dt>
+<dd><p>Create a user using the info sent by the front-end.</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>user: Schemas.EmployeeCreate </dt><dd><p>A response template representing the info inputted by the user.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A database session.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h2>Returns<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>temp_user: Models.Employee</dt><dd><p>A successfully created user using the given info for testing purposes,
+can also be tested on FASTAPI Docs ‘<a class="reference external" href="http://localhost:8000/docs">http://localhost:8000/docs</a>’</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.delete_employee">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">delete_employee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">employee_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#delete_employee"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.delete_employee" title="Permalink to this definition"></a></dt>
+<dd><p>Delete an employee in the DB if found.</p>
+<section id="id12">
+<h2>Parameters<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>employee_id: int</dt><dd><p>Employee’s id.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h2>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.delete_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">delete_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#delete_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.delete_sprint" title="Permalink to this definition"></a></dt>
+<dd><p>Delete a sprint in the DB as well as all tasks associated to the given sprint_id.</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_id: int</dt><dd><p>A sprint’s id.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h2>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.delete_supervisor">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">delete_supervisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supervisor_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#delete_supervisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.delete_supervisor" title="Permalink to this definition"></a></dt>
+<dd><p>Find a supervisor in the DB with the given supervisor_id. If found, delete that
+specific supervisor and change the ‘role’ of the associated employee to 0 (demote).
+OW, throw a 404 HTTP exception.</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>supervisor_id: int</dt><dd><p>An id of a supervisor.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h2>Returns<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h2>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.delete_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">delete_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#delete_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.delete_task" title="Permalink to this definition"></a></dt>
+<dd><p>Delete a task in the DB using the given taks_id.</p>
+<section id="id18">
+<h2>Parameters<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_id: int</dt><dd><p>A task’s id.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB Session.</p>
+</dd>
+</dl>
+</section>
+<section id="id19">
+<h2>Returns<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h2>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_all_supervisors">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_all_supervisors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_all_supervisors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_all_supervisors" title="Permalink to this definition"></a></dt>
+<dd><p>Show all supervisors w/in the db.</p>
+<section id="id20">
+<h2>Parameters<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id21">
+<h2>Returns<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>supervisors: list</dt><dd><p>A list of supervisor objects.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_all_tasks">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_all_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_all_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_all_tasks" title="Permalink to this definition"></a></dt>
+<dd><p>Get all tasks associated to the current employee.</p>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>current_employee: Schemas.Employee </dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id23">
+<h2>Returns<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>tasks: list</dt><dd><p>A list of tasks associated to the current employee.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_all_users">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_all_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_all_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_all_users" title="Permalink to this definition"></a></dt>
+<dd><p>Shows all users w/in the database.
+Same as SELECT * FROM EMPLOYEE.</p>
+<section id="id24">
+<h2>Parameters<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h2>Returns<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>employees: list</dt><dd><p>A list of employee objects.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_current_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(OAuth2PasswordBearer)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_current_user" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_db">
+<span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_db" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves a db session and close the db after each session.</p>
+<section id="id26">
+<h2>Notes<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Always use as dependency injection to open a db session before modify/update data inside a .db file.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_sprint_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_sprint_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="schemas.html#schemas.Sprint" title="schemas.Sprint"><span class="pre">Sprint</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/services.html#get_sprint_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_sprint_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Find a sprint in the DB using the given sprint_id. If not found, raise a 404 HTTP exception.
+OW, return a Sprint Object.</p>
+<section id="id27">
+<h2>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_id: int</dt><dd><p>A sprint’s id.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee who’s signed in.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id28">
+<h2>Returns<a class="headerlink" href="#id28" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_db: Schemas.Sprint</dt><dd><p>A Sprint object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_sprint_tasks">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_sprint_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_sprint_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_sprint_tasks" title="Permalink to this definition"></a></dt>
+<dd><p>Get all tasks associated to a sprint.</p>
+<section id="id29">
+<h2>Parameters<a class="headerlink" href="#id29" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_id: int</dt><dd><p>A sprint’s id.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id30">
+<h2>Returns<a class="headerlink" href="#id30" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>tasks_db: list</dt><dd><p>A list of tasks associated to a sprint.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_supervisors">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_supervisors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_supervisors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_supervisors" title="Permalink to this definition"></a></dt>
+<dd><p>Don’t remember why I created this function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_task_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_task_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="schemas.html#schemas.Task" title="schemas.Task"><span class="pre">Task</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/services.html#get_task_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_task_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get a task within a DB using the given task_id. If a task is not found, raise a 404 
+HTTP exception, OW return a task object.</p>
+<section id="id31">
+<h2>Parameters<a class="headerlink" href="#id31" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_id: int</dt><dd><p>A task’s id.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id32">
+<h2>Returns<a class="headerlink" href="#id32" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_db: Schemas.Task | None</dt><dd><p>A task object found in the DB.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_user_by_email">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_user_by_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_user_by_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_user_by_email" title="Permalink to this definition"></a></dt>
+<dd><p>Does a SQL query to find a user with the given email and return the first result since 
+email is a unique column, meaning users can’t create accounts using the same email.</p>
+<section id="id33">
+<h2>Parameters<a class="headerlink" href="#id33" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>email: str</dt><dd><p>User’s email.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A database session.</p>
+</dd>
+</dl>
+</section>
+<section id="id34">
+<h2>Returns<a class="headerlink" href="#id34" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>user_obj: Schemas.Employee</dt><dd><p>An Employee object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.get_user_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">get_user_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#get_user_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.get_user_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Does a SQL query using the given employee_id. If no user found, raise a 404 HTTP exception,
+otherwise, returns an Employee object found in the db using the given employee_id.</p>
+<section id="id35">
+<h2>Parameters<a class="headerlink" href="#id35" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>employee_id: int</dt><dd><p>An employee’s id.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id36">
+<h2>Returns<a class="headerlink" href="#id36" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>employee_obj: Schemas.Employee</dt><dd><p>An employee object found in the db with the given id.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.hash_password">
+<span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">hash_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/services.html#hash_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.hash_password" title="Permalink to this definition"></a></dt>
+<dd><p>Hash the given password.</p>
+<section id="id37">
+<h2>Parameters<a class="headerlink" href="#id37" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>password: str</dt><dd><p>User’s password in plain text.</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h2>Returns<a class="headerlink" href="#id38" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>hashed_pw: bytes</dt><dd><p>Hashed password ( user’s password in bytes ).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.show_sprints_current_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">show_sprints_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#show_sprints_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.show_sprints_current_user" title="Permalink to this definition"></a></dt>
+<dd><p>Get all sprints associated to the current employee.</p>
+<section id="id39">
+<h2>Parameters<a class="headerlink" href="#id39" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A DB session.</p>
+</dd>
+</dl>
+</section>
+<section id="id40">
+<h2>Returns<a class="headerlink" href="#id40" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprints_db: list</dt><dd><p>A list of sprint objects associated to the current employee.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.update_sprint">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">update_sprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sprint_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sprint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.SprintCreate" title="schemas.SprintCreate"><span class="pre">SprintCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#update_sprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.update_sprint" title="Permalink to this definition"></a></dt>
+<dd><p>Find a sprint using the given sprint_id, and update its data (sprint_name)</p>
+<section id="id41">
+<h2>Parameters<a class="headerlink" href="#id41" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint_id: int</dt><dd><p>A sprint’s id.</p>
+</dd>
+<dt>sprint: Schemas.SprintCreate</dt><dd><p>An object representing data sent by the front-end whenever a user edits a sprint.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id42">
+<h2>Returns<a class="headerlink" href="#id42" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>sprint: Schemas.Sprint</dt><dd><p>A successfully updated sprint.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.update_task">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">update_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.TaskCreate" title="schemas.TaskCreate"><span class="pre">TaskCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_employee</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="schemas.html#schemas.Employee" title="schemas.Employee"><span class="pre">Employee</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services.html#update_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.update_task" title="Permalink to this definition"></a></dt>
+<dd><p>Find a task using the given task_id, and update its data (task_name &amp; task_info).</p>
+<section id="id43">
+<h2>Parameters<a class="headerlink" href="#id43" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task_id: int</dt><dd><p>A task’s id.</p>
+</dd>
+<dt>task: Schemas.TaskCreate</dt><dd><p>An object representing data sent by the front-end whenever a user edits a task.</p>
+</dd>
+<dt>current_employee: Schemas.Employee</dt><dd><p>The current employee.</p>
+</dd>
+<dt>db: Session</dt><dd><p>A db session.</p>
+</dd>
+</dl>
+</section>
+<section id="id44">
+<h2>Returns<a class="headerlink" href="#id44" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>task: Schemas.Task</dt><dd><p>A successfully updated task.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="services.verify_password">
+<span class="sig-prename descclassname"><span class="pre">services.</span></span><span class="sig-name descname"><span class="pre">verify_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/services.html#verify_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.verify_password" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether hashed password and inputted password are the same.</p>
+<section id="id45">
+<h2>Parameters<a class="headerlink" href="#id45" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>password: str</dt><dd><p>User’s password in plain text (str).</p>
+</dd>
+<dt>db_password: bytes </dt><dd><p>The hashed password in bytes form, stored in the database.</p>
+</dd>
+</dl>
+</section>
+<section id="id46">
+<h2>Returns<a class="headerlink" href="#id46" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>is_matched: bool</dt><dd><p>A bool indicates whether or not 2 given passwords are the same.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="schemas.html" class="btn btn-neutral float-left" title="schemas module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test.html" class="btn btn-neutral float-right" title="test module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

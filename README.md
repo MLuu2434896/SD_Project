@@ -1,11 +1,11 @@
-Backend:  
-- python version 3.10.6  
-
-Frontend:  
-- Please have nodejs and npm installed on your computer.  
-- nodejs version v18.16.0  
-- npm version 9.7.1  
-- ***NOTE: If you used the installer on offical NodeJS website, npm would be included when installing Nodejs.  
-
-NOTE:  
-- Frontend and backend will use 2 ports: 3000 for frontend and 8000 for backend, so if you have conflicts with previously deployed websites, change them as you'd like.  
+To view the BE documentation:
+- install all newly added packages in the BE.
+- Activate the venv.
+- Navigate to backend/src/docs
+- Execute the .bat file.
+```bash
+.\make.bat html # If you're using Windows cmd or whenever you modify the comments.
+./make.bat html # if you're using bash.
+make # if you have makefile.
+```
+- Open index.html located in backend/src/docs/_build/html/ using file explorer to view the docs.

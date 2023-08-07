@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for main</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">security</span>
+<span class="kn">from</span> <span class="nn">fastapi.middleware.cors</span> <span class="kn">import</span> <span class="n">CORSMiddleware</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">uvicorn</span>
+<span class="kn">import</span> <span class="nn">schemas</span> <span class="k">as</span> <span class="nn">Schemas</span>
+<span class="kn">import</span> <span class="nn">services</span> <span class="k">as</span> <span class="nn">Services</span>
+
+
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+
+<span class="n">origins</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;http://127.0.0.1:3000&quot;</span><span class="p">,</span> <span class="s2">&quot;http://localhost:3000&quot;</span> <span class="p">]</span>
+
+<span class="c1"># Configure FastAPI to allow requests from web</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span>       <span class="o">=</span> <span class="n">origins</span><span class="p">,</span>
+    <span class="n">allow_credentials</span>   <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span>       <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s2">&quot;OPTIONS&quot;</span> <span class="p">),</span>
+    <span class="n">allow_headers</span>       <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;*&quot;</span> <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1">########## STATUS_CHECK ##########</span>
+<div class="viewcode-block" id="read_root"><a class="viewcode-back" href="../main.html#main.read_root">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;status_check&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">read_root</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;f_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;l_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;world&quot;</span> <span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;f_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;l_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;world&quot;</span> <span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;f_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;sat&quot;</span><span class="p">,</span> <span class="s2">&quot;l_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;sun&quot;</span> <span class="p">}</span>
+    <span class="p">]</span></div>
+
+<div class="viewcode-block" id="read_item"><a class="viewcode-back" href="../main.html#main.read_item">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/items/</span><span class="si">{items_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;status_check&quot;</span><span class="p">]</span> <span class="p">)</span> 
+<span class="k">async</span> <span class="k">def</span> <span class="nf">read_item</span><span class="p">(</span> <span class="n">items_id</span><span class="p">:</span> <span class="nb">int</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;items_id&quot;</span> <span class="p">:</span> <span class="n">items_id</span> <span class="p">}</span></div>
+
+<span class="c1">########## EMPLOYEE ##########</span>
+<div class="viewcode-block" id="show_users"><a class="viewcode-back" href="../main.html#main.show_users">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/show_users&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;employee&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_users</span><span class="p">(</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Show all the users w/in the database</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_all_users</span><span class="p">(</span> <span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">employees</span></div>
+
+<div class="viewcode-block" id="show_current_user"><a class="viewcode-back" href="../main.html#main.show_current_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_user/me&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;employee&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_current_user</span><span class="p">(</span> <span class="n">user</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="create_user"><a class="viewcode-back" href="../main.html#main.create_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/api/create_user&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;employee&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span> <span class="n">user</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">EmployeeCreate</span><span class="p">,</span> 
+                       <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span>
+                    <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a new user with the given email, if the email exists w/in the database</span>
+<span class="sd">    , then raise a 404 HTTP error</span>
+<span class="sd">    If the given email is not in a correct type, a 422 error code is raised\n</span>
+
+<span class="sd">    @PARA:</span>
+<span class="sd">    user: represents the info inputted by the user when creating a new account on</span>
+<span class="sd">            frontend\n</span>
+<span class="sd">    db: a database session</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># Check whether a user with the same email exists in our database or not, if a</span>
+    <span class="c1"># a user exists, raise a 404 error.</span>
+    <span class="c1"># Wait til we&#39;re done getting the user in the db since get_user_by_email is an </span>
+    <span class="c1"># async function (refer to services.py).</span>
+    <span class="n">db_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_user_by_email</span><span class="p">(</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">db_user</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;This email is already in use! Try a different email&quot;</span> <span class="p">)</span>
+    
+    <span class="c1"># If no user is found in the database, register a new user</span>
+    <span class="n">temp_user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span> <span class="n">user</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+    
+    <span class="c1"># Once a user is created, automatically authorize that user</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span> <span class="n">temp_user</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="generate_token"><a class="viewcode-back" href="../main.html#main.generate_token">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/api/token&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;employee&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_token</span><span class="p">(</span> <span class="n">form_data</span><span class="p">:</span> <span class="n">security</span><span class="o">.</span><span class="n">OAuth2PasswordRequestForm</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(),</span>
+                          <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">(</span> <span class="n">form_data</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">form_data</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span> 
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> 
+            <span class="n">status_code</span><span class="o">=</span><span class="mi">401</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid Credentials!&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span> <span class="n">user</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../main.html#main.delete_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/api/delete_user/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;employee&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">delete_employee</span><span class="p">(</span> <span class="n">employee_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Successfully deleted&quot;</span> <span class="p">}</span></div>
+
+<span class="c1">########## LEAD ##########</span>
+<div class="viewcode-block" id="create_supervisor"><a class="viewcode-back" href="../main.html#main.create_supervisor">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/api/create_supervisor&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;supervisor&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Supervisor</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">create_supervisor</span><span class="p">(</span> <span class="n">supervisor</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SupervisorCreate</span><span class="p">,</span> 
+                             <span class="c1"># employee: Schemas.Employee = Depends( Services.get_current_user ),</span>
+                             <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    
+    <span class="c1"># Get an employee with the id provided by the user.</span>
+    <span class="c1"># If an employee not found, throw a 404 HTTP exception,</span>
+    <span class="c1"># otherwise, create a new supervisor/lead with the provided id</span>
+    <span class="n">temp_employee</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_user_by_id</span><span class="p">(</span> <span class="nb">id</span><span class="o">=</span><span class="n">supervisor</span><span class="o">.</span><span class="n">employee_id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Create a lead with the given id</span>
+    <span class="n">temp_supervisor</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_supervisor</span><span class="p">(</span> <span class="n">supervisor</span><span class="o">=</span><span class="n">supervisor</span><span class="p">,</span> 
+                                                        <span class="n">employee</span><span class="o">=</span><span class="n">temp_employee</span><span class="p">,</span>
+                                                        <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="c1"># Return a supervisor object in json, similar to </span>
+    <span class="k">return</span> <span class="n">temp_supervisor</span></div>
+
+<div class="viewcode-block" id="show_supervisors"><a class="viewcode-back" href="../main.html#main.show_supervisors">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_supervisors&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;supervisor&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Supervisor</span> <span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_supervisors</span><span class="p">(</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">supervisors</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_all_supervisors</span><span class="p">(</span> <span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">supervisors</span></div>
+
+<div class="viewcode-block" id="delete_supervisor"><a class="viewcode-back" href="../main.html#main.delete_supervisor">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/api/delete_supervisor/</span><span class="si">{supervisor_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;supervisor&quot;</span><span class="p">],</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">delete_supervisor</span><span class="p">(</span> <span class="n">supervisor_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">delete_supervisor</span><span class="p">(</span> <span class="n">supervisor_id</span><span class="o">=</span><span class="n">supervisor_id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;message&quot;</span> <span class="p">:</span> <span class="s2">&quot;Successfully deleted!&quot;</span><span class="p">}</span></div>
+
+<span class="c1">######### TASKS ##########</span>
+<div class="viewcode-block" id="get_tasks_by_sprint_id"><a class="viewcode-back" href="../main.html#main.get_tasks_by_sprint_id">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_tasks/</span><span class="si">{sprint_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">get_tasks_by_sprint_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">tasks_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_sprint_tasks</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span>
+                                                <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span>
+                                                <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">tasks_db</span></div>
+
+<div class="viewcode-block" id="create_task"><a class="viewcode-back" href="../main.html#main.create_task">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/api/create_task/</span><span class="si">{sprint_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">create_task</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">TaskCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">task_obj</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span> 
+                                           <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span> 
+                                           <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                           <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_obj</span></div>
+
+<div class="viewcode-block" id="delete_task"><a class="viewcode-back" href="../main.html#main.delete_task">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/api/delete_task/</span><span class="si">{task_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">delete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">delete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> 
+                                <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Successfully deleted a task!&quot;</span> <span class="p">}</span></div>
+
+<div class="viewcode-block" id="show_all_tasks_current_user"><a class="viewcode-back" href="../main.html#main.show_all_tasks_current_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_all_tasks&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_all_tasks_current_user</span><span class="p">(</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">tasks_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_all_tasks</span><span class="p">(</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                             <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tasks_db</span></div>
+
+<div class="viewcode-block" id="set_complete_task"><a class="viewcode-back" href="../main.html#main.set_complete_task">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/api/complete_task/</span><span class="si">{task_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">set_complete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">updated_task</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">complete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">updated_task</span></div>
+
+<div class="viewcode-block" id="show_task_by_id"><a class="viewcode-back" href="../main.html#main.show_task_by_id">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_task/</span><span class="si">{task_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span><span class="p">)</span> <span class="p">):</span>
+    <span class="n">task_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span>
+                                             <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="update_task"><a class="viewcode-back" href="../main.html#main.update_task">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/api/update_task/</span><span class="si">{task_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tasks&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">update_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">TaskCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">updated_task</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">update_task</span><span class="p">(</span> <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span>
+                                         <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                                         <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span>
+                                         <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">updated_task</span></div>
+
+<span class="c1">########## SPRINTS ##########</span>
+<div class="viewcode-block" id="create_sprint"><a class="viewcode-back" href="../main.html#main.create_sprint">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span> <span class="s2">&quot;/api/create_sprint&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sprints&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">create_sprint</span><span class="p">(</span> <span class="n">sprint</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SprintCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">sprint_obj</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">create_sprint</span><span class="p">(</span> <span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">,</span> 
+                                        <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                        <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sprint_obj</span></div>
+
+<div class="viewcode-block" id="show_sprints_current_user"><a class="viewcode-back" href="../main.html#main.show_sprints_current_user">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_sprints&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sprints&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">]</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_sprints_current_user</span><span class="p">(</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">sprints_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">show_sprints_current_user</span><span class="p">(</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                                     <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">sprints_db</span></div>
+
+<div class="viewcode-block" id="delete_sprint"><a class="viewcode-back" href="../main.html#main.delete_sprint">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="s2">&quot;/api/delete_sprint/</span><span class="si">{sprint_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sprints&quot;</span><span class="p">],</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">delete_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">delete_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Successfully deleted a sprint!&quot;</span> <span class="p">}</span></div>
+
+<div class="viewcode-block" id="update_sprint"><a class="viewcode-back" href="../main.html#main.update_sprint">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">put</span><span class="p">(</span> <span class="s2">&quot;/api/update_sprint/</span><span class="si">{sprint_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sprints&quot;</span><span class="p">],</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">update_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sprint</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SprintCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">updated_sprint</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">update_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span>
+                                                   <span class="n">sprint</span><span class="o">=</span><span class="n">sprint</span><span class="p">,</span> 
+                                                   <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                                   <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">updated_sprint</span></div>
+
+<div class="viewcode-block" id="show_sprint_by_id"><a class="viewcode-back" href="../main.html#main.show_sprint_by_id">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s2">&quot;/api/show_sprint/</span><span class="si">{sprint_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sprints&quot;</span><span class="p">],</span> <span class="n">response_model</span><span class="o">=</span><span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">show_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_current_user</span> <span class="p">),</span> <span class="n">db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span>
+                                                 <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span> 
+                                                 <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sprint_db</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span> <span class="s2">&quot;main:app&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">reload</span><span class="o">=</span><span class="kc">True</span> <span class="p">)</span> 
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

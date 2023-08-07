@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>services &mdash; Trackage&#39;s BE Documentation 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Trackage's BE Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Trackage's BE Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">services</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for services</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bcrypt</span><span class="o">,</span> <span class="nn">database</span><span class="o">,</span> <span class="nn">models</span>
+<span class="kn">import</span> <span class="nn">schemas</span> <span class="k">as</span> <span class="nn">Schemas</span>
+<span class="kn">import</span> <span class="nn">jwt</span> <span class="k">as</span> <span class="nn">JWT</span>
+<span class="kn">import</span> <span class="nn">services</span> <span class="k">as</span> <span class="nn">Services</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">JWT_KEY</span><span class="p">,</span> <span class="n">OAUTH_2_SCHEMA</span><span class="p">,</span> <span class="n">JWT_ALGORITHM</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span>
+
+
+<div class="viewcode-block" id="verify_password"><a class="viewcode-back" href="../services.html#services.verify_password">[docs]</a><span class="k">def</span> <span class="nf">verify_password</span><span class="p">(</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">db_password</span><span class="p">:</span> <span class="nb">bytes</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Check whether hashed password and inputted password are the same.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    password: str</span>
+<span class="sd">        User&#39;s password in plain text (str).</span>
+<span class="sd">    db_password: bytes </span>
+<span class="sd">        The hashed password in bytes form, stored in the database.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    is_matched: bool</span>
+<span class="sd">        A bool indicates whether or not 2 given passwords are the same.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Converts user&#39;s password to bytes.</span>
+    <span class="n">user_password</span> <span class="o">=</span> <span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span>
+
+    <span class="n">is_matched</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">checkpw</span><span class="p">(</span> <span class="n">user_password</span><span class="p">,</span> <span class="n">db_password</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">is_matched</span></div>
+
+<div class="viewcode-block" id="hash_password"><a class="viewcode-back" href="../services.html#services.hash_password">[docs]</a><span class="k">def</span> <span class="nf">hash_password</span><span class="p">(</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Hash the given password.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    password: str</span>
+<span class="sd">        User&#39;s password in plain text.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hashed_pw: bytes</span>
+<span class="sd">        Hashed password ( user&#39;s password in bytes ).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Generate a random salt before adding it to the hashed password. </span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">gensalt</span><span class="p">()</span>
+
+    <span class="c1"># Convert user&#39;s password into bytes form.</span>
+    <span class="n">password_in_bytes</span> <span class="o">=</span> <span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span> <span class="s2">&quot;utf-8&quot;</span> <span class="p">)</span>
+
+    <span class="c1"># Hash the password with the generated salt.</span>
+    <span class="n">hashed_pw</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">hashpw</span><span class="p">(</span> <span class="n">password_in_bytes</span><span class="p">,</span> <span class="n">salt</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">hashed_pw</span></div>
+
+<div class="viewcode-block" id="create_db"><a class="viewcode-back" href="../services.html#services.create_db">[docs]</a><span class="k">def</span> <span class="nf">create_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a .db file using the structures defined in models.py.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        Must delete the old .db file to avoid structure conflicts.</span>
+<span class="sd">        </span>
+<span class="sd">    Example</span>
+<span class="sd">    ----------</span>
+<span class="sd">    To use this function, navigate to the folder that contains services.py, and do the following::</span>
+
+<span class="sd">        $ python  # To enter python terminal.</span>
+<span class="sd">        &gt;&gt;&gt; import services</span>
+<span class="sd">        &gt;&gt;&gt; services.create_db() # This will create a .db file.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span> <span class="n">bind</span><span class="o">=</span><span class="n">database</span><span class="o">.</span><span class="n">engine</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_db"><a class="viewcode-back" href="../services.html#services.get_db">[docs]</a><span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Retrieves a db session and close the db after each session.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ---------</span>
+<span class="sd">        Always use as dependency injection to open a db session before modify/update data inside a .db file.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span> 
+        <span class="n">db</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">SessionLocal</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">db</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_user_by_email"><a class="viewcode-back" href="../services.html#services.get_user_by_email">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_user_by_email</span><span class="p">(</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Does a SQL query to find a user with the given email and return the first result since </span>
+<span class="sd">    email is a unique column, meaning users can&#39;t create accounts using the same email.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    email: str</span>
+<span class="sd">        User&#39;s email.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A database session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user_obj: Schemas.Employee</span>
+<span class="sd">        An Employee object.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span> <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_user_by_id"><a class="viewcode-back" href="../services.html#services.get_user_by_id">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Does a SQL query using the given employee_id. If no user found, raise a 404 HTTP exception,</span>
+<span class="sd">    otherwise, returns an Employee object found in the db using the given employee_id.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employee_id: int</span>
+<span class="sd">        An employee&#39;s id.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employee_obj: Schemas.Employee</span>
+<span class="sd">        An employee object found in the db with the given id.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">employee_db</span> <span class="o">=</span>  <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span> <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">employee_db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span>
+                            <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Employee does not exist!&quot;</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">employee_db</span></div>
+
+<div class="viewcode-block" id="get_all_users"><a class="viewcode-back" href="../services.html#services.get_all_users">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_all_users</span><span class="p">(</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Shows all users w/in the database.</span>
+<span class="sd">    Same as SELECT * FROM EMPLOYEE.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employees: list</span>
+<span class="sd">        A list of employee objects.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">employees</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_all_supervisors"><a class="viewcode-back" href="../services.html#services.get_all_supervisors">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_all_supervisors</span><span class="p">(</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Show all supervisors w/in the db.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    supervisors: list</span>
+<span class="sd">        A list of supervisor objects.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">supervisors</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Supervisor</span> <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Supervisor</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">supervisors</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="create_user"><a class="viewcode-back" href="../services.html#services.create_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span> <span class="n">user</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">EmployeeCreate</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a user using the info sent by the front-end.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user: Schemas.EmployeeCreate </span>
+<span class="sd">        A response template representing the info inputted by the user.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A database session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    temp_user: Models.Employee</span>
+<span class="sd">        A successfully created user using the given info for testing purposes,</span>
+<span class="sd">        can also be tested on FASTAPI Docs &#39;http://localhost:8000/docs&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># Hash the given password before assigning it to a user</span>
+    <span class="n">temp_hashed_password</span> <span class="o">=</span> <span class="n">hash_password</span><span class="p">(</span> <span class="n">user</span><span class="o">.</span><span class="n">hashed_password</span> <span class="p">)</span>
+
+    <span class="c1"># Initialize a user and assign the corresponding vars using the given inputs</span>
+    <span class="n">temp_user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span><span class="p">(</span> <span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+                                 <span class="n">hashed_password</span><span class="o">=</span><span class="n">temp_hashed_password</span><span class="p">,</span>
+                                 <span class="n">first_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                                 <span class="n">last_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span> <span class="p">)</span>
+
+    <span class="c1"># Add to database</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">temp_user</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">temp_user</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">temp_user</span></div>
+
+<div class="viewcode-block" id="authenticate_user"><a class="viewcode-back" href="../services.html#services.authenticate_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Verify if a user exists within the DB and if their password matches with what&#39;s stored </span>
+<span class="sd">    in the DB.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    email: str</span>
+<span class="sd">        An email in plain text sent by the front-end.</span>
+<span class="sd">    password: str</span>
+<span class="sd">        A password in plain text sent by the front-end.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user: Schemas.Employee | False</span>
+<span class="sd">        Returns an employee object if found in the DB, otherwise returns false.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user_by_email</span><span class="p">(</span> <span class="n">email</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verify_password</span><span class="p">(</span> <span class="n">password</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">hashed_password</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">return</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="create_token"><a class="viewcode-back" href="../services.html#services.create_token">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">create_token</span><span class="p">(</span> <span class="n">user</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">):</span>
+    <span class="n">temp_user</span> <span class="o">=</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">user</span> <span class="p">)</span>
+
+    <span class="n">token</span> <span class="o">=</span> <span class="n">JWT</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span> <span class="n">temp_user</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">JWT_KEY</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span> <span class="n">access_token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">token_type</span><span class="o">=</span><span class="s2">&quot;bearer&quot;</span> <span class="p">)</span></div>
+    
+<div class="viewcode-block" id="get_current_user"><a class="viewcode-back" href="../services.html#services.get_current_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_db</span> <span class="p">),</span> 
+                            <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span> <span class="n">OAUTH_2_SCHEMA</span> <span class="p">)</span> <span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">JWT</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="n">token</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">JWT_KEY</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="n">JWT_ALGORITHM</span><span class="p">]</span> <span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">401</span><span class="p">,</span> 
+                             <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid email or password!&quot;</span>
+                               <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">user</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="create_supervisor"><a class="viewcode-back" href="../services.html#services.create_supervisor">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">create_supervisor</span><span class="p">(</span> <span class="n">supervisor</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SupervisorCreate</span><span class="p">,</span>
+                             <span class="n">employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> 
+                             <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a supervisor whose id, LN, FN are taken from employee table since </span>
+<span class="sd">    a supervisor is one of the employees.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    supervisor : schemas.SupervisorCreate</span>
+<span class="sd">        A template that represents user&#39;s inputs and is used to create a supervisor.</span>
+<span class="sd">    employee : schemas.Employee</span>
+<span class="sd">        An employee object that&#39;s retrieved from the database.</span>
+<span class="sd">    db : Session</span>
+<span class="sd">        A database session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -----------</span>
+<span class="sd">    Supervisor : schemas.Supervisor</span>
+<span class="sd">        The newly created supervisor.</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">temp_supervisor</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Supervisor</span><span class="p">(</span> <span class="o">**</span><span class="n">supervisor</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span>
+                                         <span class="n">first_name</span><span class="o">=</span><span class="n">employee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> 
+                                         <span class="n">last_name</span><span class="o">=</span><span class="n">employee</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
+                                         <span class="n">email</span><span class="o">=</span><span class="n">employee</span><span class="o">.</span><span class="n">email</span> <span class="p">)</span>
+    
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">temp_supervisor</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">temp_supervisor</span> <span class="p">)</span>
+
+    <span class="c1"># Update the role of a particular employee after making him/her a supervisor</span>
+    <span class="k">await</span> <span class="n">_update_employee_role</span><span class="p">(</span> <span class="n">employee</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="mi">1</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Supervisor</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">temp_supervisor</span> <span class="p">)</span></div>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">_update_employee_role</span><span class="p">(</span> <span class="n">employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">int</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates the role of a specific employee once he/she gets promoted/demoted.</span>
+<span class="sd">    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employee : Schemas.Employee</span>
+<span class="sd">        An employee retrieved from the db.</span>
+<span class="sd">    db : Session</span>
+<span class="sd">        A database session.</span>
+<span class="sd">    role : int - must be specified whenever this function is called</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">employee_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_employee_selector</span><span class="p">(</span> <span class="n">employee_id</span><span class="o">=</span><span class="n">employee</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+    <span class="n">employee_db</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
+    
+    <span class="c1"># Update the role of that employee in the db</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">employee_db</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="get_supervisors"><a class="viewcode-back" href="../services.html#services.get_supervisors">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_supervisors</span><span class="p">(</span> <span class="n">user</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Don&#39;t remember why I created this function.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">temp_supervisors</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Supervisor</span> <span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span> <span class="n">employee_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Supervior</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">temp_supervisors</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">_supervisor_selector</span><span class="p">(</span> <span class="n">supervisor_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Use to query a particular supervisor using the provided supervisor id.</span>
+<span class="sd">    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    supervisor_id : int</span>
+<span class="sd">        The assigned ID of a supervisor when first created.</span>
+<span class="sd">    db : Session</span>
+<span class="sd">        A database session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    temp_supervisor : Schemas.Supervisor</span>
+<span class="sd">        A supervisor object retrieved from the database.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Find a supervisor with a the given id.</span>
+    <span class="c1"># If not exist, throw a 404 HTTP exception, otherwise return an supervisor object.</span>
+    <span class="n">temp_supervisor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Supervisor</span> <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Supervisor</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">supervisor_id</span> <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">temp_supervisor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> 
+                             <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Supervisor does not exist!&quot;</span> <span class="p">)</span> 
+    
+    <span class="k">return</span> <span class="n">temp_supervisor</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">_employee_selector</span><span class="p">(</span> <span class="n">employee_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Use to query a particular employee using the provided employee id.</span>
+<span class="sd">    NOTE: This is a private function (indicates by _function_name) and must not be used outside of this file. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employee_id : int</span>
+<span class="sd">        The assigned ID of an employee when first created.</span>
+<span class="sd">    db : Session</span>
+<span class="sd">        A database session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    temp_employee : Schemas.Employees</span>
+<span class="sd">        An employee object retrieved from the database.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Find an employee with a the given id.</span>
+    <span class="c1"># If not exist, throw a 404 HTTP exception, otherwise return an employee object.</span>
+    <span class="n">temp_employee</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span> <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Employee</span><span class="o">.</span><span class="n">id</span><span class="o">==</span><span class="n">employee_id</span> <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">temp_employee</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> 
+                             <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Employee does not exist!&quot;</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">temp_employee</span>
+
+<div class="viewcode-block" id="delete_employee"><a class="viewcode-back" href="../services.html#services.delete_employee">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_employee</span><span class="p">(</span> <span class="n">employee_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Delete an employee in the DB if found.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    employee_id: int</span>
+<span class="sd">        Employee&#39;s id.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Find an employee with the given employee_id.</span>
+    <span class="n">temp_employee</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_employee_selector</span><span class="p">(</span> <span class="n">employee_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">temp_employee</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="delete_supervisor"><a class="viewcode-back" href="../services.html#services.delete_supervisor">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_supervisor</span><span class="p">(</span> <span class="n">supervisor_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Find a supervisor in the DB with the given supervisor_id. If found, delete that</span>
+<span class="sd">    specific supervisor and change the &#39;role&#39; of the associated employee to 0 (demote).</span>
+<span class="sd">    OW, throw a 404 HTTP exception.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    supervisor_id: int</span>
+<span class="sd">        An id of a supervisor.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Find a supervisor w/in the DB.</span>
+    <span class="n">temp_supervisor</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_supervisor_selector</span><span class="p">(</span> <span class="n">supervisor_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Delete that specific supervisor if found.</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">temp_supervisor</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># Find the associated employee.</span>
+    <span class="n">employee_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_employee_selector</span><span class="p">(</span> <span class="n">temp_supervisor</span><span class="o">.</span><span class="n">employee_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+    <span class="c1"># Change &#39;role&#39; to 0.</span>
+    <span class="k">await</span> <span class="n">_update_employee_role</span><span class="p">(</span> <span class="n">employee_db</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="create_task"><a class="viewcode-back" href="../services.html#services.create_task">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">create_task</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">TaskCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a task with the given sprint_id.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">        Must be an authorized user to use this function on FASTAPI Docs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_id: int</span>
+<span class="sd">        A sprint&#39;s id.</span>
+<span class="sd">    task: Schemas.TaskCreate</span>
+<span class="sd">        Data sent by the front-end whenever a user creates a task.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee who&#39;s signed in.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_obj: Schemas.Task</span>
+<span class="sd">        A successfully created task.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Search DB using the provided sprint_id.</span>
+    <span class="c1"># Throw an 404 HTTP exception if not found.</span>
+    <span class="c1"># Otherwise, add a task to the provided sprint id.</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_id</span><span class="p">,</span>
+                                        <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span>
+                                        <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Add a task to the provided sprint_id.</span>
+    <span class="n">task_obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Task</span><span class="p">(</span> <span class="o">**</span><span class="n">task</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> 
+                             <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_db</span><span class="o">.</span><span class="n">sprint_id</span> <span class="p">)</span>
+    
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">task_obj</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">task_obj</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">task_obj</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_sprint_by_id"><a class="viewcode-back" href="../services.html#services.get_sprint_by_id">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Find a sprint in the DB using the given sprint_id. If not found, raise a 404 HTTP exception.</span>
+<span class="sd">    OW, return a Sprint Object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_id: int</span>
+<span class="sd">        A sprint&#39;s id.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee who&#39;s signed in.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ---------- </span>
+<span class="sd">    sprint_db: Schemas.Sprint</span>
+<span class="sd">        A Sprint object.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">)</span> \
+                    <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                            <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">employee_id</span> <span class="o">==</span> <span class="n">current_employee</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                            <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">sprint_id</span> <span class="o">==</span> <span class="n">sprint_id</span>
+                            <span class="p">)</span> \
+                    <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">sprint_db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span> <span class="mi">404</span><span class="p">,</span> 
+                             <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Sprint not found!&quot;</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">sprint_db</span></div>
+
+<div class="viewcode-block" id="get_sprint_tasks"><a class="viewcode-back" href="../services.html#services.get_sprint_tasks">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_sprint_tasks</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get all tasks associated to a sprint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_id: int</span>
+<span class="sd">        A sprint&#39;s id.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tasks_db: list</span>
+<span class="sd">        A list of tasks associated to a sprint.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Find a sprint in the DB using the given sprint_id.</span>
+    <span class="c1"># Throw a 404 HTTP exception if not found.</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+    
+    <span class="c1"># If a sprint exists in the DB, get all tasks associated with the given sprint_id</span>
+    <span class="n">tasks_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Task</span> <span class="p">)</span> \
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">sprint_id</span> <span class="o">==</span> <span class="n">sprint_db</span><span class="o">.</span><span class="n">sprint_id</span> <span class="p">)</span> \
+    
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">tasks_db</span> <span class="p">)</span> <span class="p">)</span></div>
+    <span class="c1"># return tasks_db</span>
+
+<div class="viewcode-block" id="create_sprint"><a class="viewcode-back" href="../services.html#services.create_sprint">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">create_sprint</span><span class="p">(</span> <span class="n">sprint</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SprintCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create a sprint obj and insert it into the DB using the data sent by the front-end.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint: Schemas.SprintCreate</span>
+<span class="sd">        An object representing the data sent by the front-end whenever a user creates a sprint.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_obj: Schemas.Sprint</span>
+<span class="sd">        A successfully created sprint object.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">sprint_obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span><span class="p">(</span> <span class="o">**</span><span class="n">sprint</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> 
+                                <span class="n">employee_id</span> <span class="o">=</span> <span class="n">current_employee</span><span class="o">.</span><span class="n">id</span> <span class="p">)</span>
+    
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">sprint_obj</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">sprint_obj</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">sprint_obj</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="show_sprints_current_user"><a class="viewcode-back" href="../services.html#services.show_sprints_current_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">show_sprints_current_user</span><span class="p">(</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get all sprints associated to the current employee.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprints_db: list</span>
+<span class="sd">        A list of sprint objects associated to the current employee.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sprints_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span> <span class="p">)</span> \
+                    <span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">employee_id</span> <span class="o">==</span> <span class="n">current_employee</span><span class="o">.</span><span class="n">id</span> <span class="p">)</span> \
+                    <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">sprints_db</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="delete_task"><a class="viewcode-back" href="../services.html#services.delete_task">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Delete a task in the DB using the given taks_id.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_id: int</span>
+<span class="sd">        A task&#39;s id.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB Session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">task_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_task_by_id"><a class="viewcode-back" href="../services.html#services.get_task_by_id">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a task within a DB using the given task_id. If a task is not found, raise a 404 </span>
+<span class="sd">    HTTP exception, OW return a task object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_id: int</span>
+<span class="sd">        A task&#39;s id.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_db: Schemas.Task | None</span>
+<span class="sd">        A task object found in the DB.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">task_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Task</span> <span class="p">)</span> \
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">models</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">task_id</span> <span class="o">==</span> <span class="n">task_id</span> <span class="p">)</span> \
+                <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">task_db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> 
+                             <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Task not found!&quot;</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">task_db</span></div>
+
+<div class="viewcode-block" id="delete_sprint"><a class="viewcode-back" href="../services.html#services.delete_sprint">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Delete a sprint in the DB as well as all tasks associated to the given sprint_id.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_id: int</span>
+<span class="sd">        A sprint&#39;s id.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Find all tasks associated with the given sprint_id.</span>
+    <span class="n">tasks_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Services</span><span class="o">.</span><span class="n">get_sprint_tasks</span><span class="p">(</span> <span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint_db</span><span class="o">.</span><span class="n">sprint_id</span><span class="p">,</span>
+                                                <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span>
+                                                <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">tasks_db</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># If there are tasks inside a sprint, delete all tasks.</span>
+        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks_db</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">delete_task</span><span class="p">(</span> <span class="n">task</span><span class="o">.</span><span class="n">task_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Delete the sprint itself</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span> <span class="n">sprint_db</span> <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_all_tasks"><a class="viewcode-back" href="../services.html#services.get_all_tasks">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_all_tasks</span><span class="p">(</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get all tasks associated to the current employee.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    current_employee: Schemas.Employee </span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A DB session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tasks: list</span>
+<span class="sd">        A list of tasks associated to the current employee.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Get all sprints asso. to the current employee.</span>
+    <span class="n">current_user_sprints</span> <span class="o">=</span> <span class="k">await</span> <span class="n">show_sprints_current_user</span><span class="p">(</span> <span class="n">current_employee</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="c1"># Total tasks.</span>
+    <span class="n">all_tasks_db</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Get all tasks in each sprint, if a sprint has no tasks, move on to the next sprint.</span>
+    <span class="c1"># OW, push tasks to all_tasks_db.</span>
+    <span class="k">for</span> <span class="n">sprint</span> <span class="ow">in</span> <span class="n">current_user_sprints</span><span class="p">:</span>
+        <span class="n">sprint_tasks_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_sprint_tasks</span><span class="p">(</span><span class="n">sprint_id</span><span class="o">=</span><span class="n">sprint</span><span class="o">.</span><span class="n">sprint_id</span><span class="p">,</span> 
+                                           <span class="n">current_employee</span><span class="o">=</span><span class="n">current_employee</span><span class="p">,</span>
+                                           <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">sprint_tasks_db</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span> 
+
+        <span class="n">all_tasks_db</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">sprint_tasks_db</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">,</span> <span class="n">all_tasks_db</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="complete_task"><a class="viewcode-back" href="../services.html#services.complete_task">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">complete_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Change the complete status of a task to 1 if found in the DB, </span>
+<span class="sd">    OW, raise a 404 HTTP exception.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_id: int</span>
+<span class="sd">        A task&#39;s id.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task: Schemas.Task</span>
+<span class="sd">        A task object found in the DB.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">task_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span> <span class="p">)</span>
+
+    <span class="n">task_db</span><span class="o">.</span><span class="n">is_complete</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="update_sprint"><a class="viewcode-back" href="../services.html#services.update_sprint">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">update_sprint</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sprint</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">SprintCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Find a sprint using the given sprint_id, and update its data (sprint_name)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint_id: int</span>
+<span class="sd">        A sprint&#39;s id.</span>
+<span class="sd">    sprint: Schemas.SprintCreate</span>
+<span class="sd">        An object representing data sent by the front-end whenever a user edits a sprint.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sprint: Schemas.Sprint</span>
+<span class="sd">        A successfully updated sprint.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sprint_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_sprint_by_id</span><span class="p">(</span> <span class="n">sprint_id</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="n">sprint_db</span><span class="o">.</span><span class="n">sprint_name</span> <span class="o">=</span> <span class="n">sprint</span><span class="o">.</span><span class="n">sprint_name</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">sprint_db</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Sprint</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">sprint_db</span> <span class="p">)</span> </div>
+
+<div class="viewcode-block" id="update_task"><a class="viewcode-back" href="../services.html#services.update_task">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">update_task</span><span class="p">(</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">TaskCreate</span><span class="p">,</span> <span class="n">current_employee</span><span class="p">:</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Employee</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Session</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Find a task using the given task_id, and update its data (task_name &amp; task_info).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task_id: int</span>
+<span class="sd">        A task&#39;s id.</span>
+<span class="sd">    task: Schemas.TaskCreate</span>
+<span class="sd">        An object representing data sent by the front-end whenever a user edits a task.</span>
+<span class="sd">    current_employee: Schemas.Employee</span>
+<span class="sd">        The current employee.</span>
+<span class="sd">    db: Session</span>
+<span class="sd">        A db session.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task: Schemas.Task</span>
+<span class="sd">        A successfully updated task.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">task_db</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_task_by_id</span><span class="p">(</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">db</span> <span class="p">)</span>
+
+    <span class="n">task_db</span><span class="o">.</span><span class="n">task_name</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">task_name</span>
+    <span class="n">task_db</span><span class="o">.</span><span class="n">task_info</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">task_info</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">Schemas</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="n">from_orm</span><span class="p">(</span> <span class="n">task_db</span> <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Man Luu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
